@@ -16,7 +16,10 @@
   </head>
   <body>
     <header class="topbar">
-      <p class="brand">Maratón SC</p>
+      <div class="brand-header">
+        <img class="brand-logo" src="assets/logo.jpg" alt="Logo de Maratón SC" />
+        <p class="brand">Maratón SC</p>
+      </div>
       <h1>Campeonato de Fútbol Sala</h1>
       <p class="sync">
         <span id="sync-state">Sincronizado</span>
@@ -62,7 +65,12 @@
         <div class="panel-head">
           <h2>Fase eliminatoria</h2>
         </div>
-        <div id="elimination-bracket" class="elimination-bracket"></div>
+        <nav class="elimination-subnav" aria-label="Rondas de la fase eliminatoria">
+          <button type="button" class="elimination-tab is-active" data-round="quarter">Cuartos de final</button>
+          <button type="button" class="elimination-tab" data-round="semi">Semifinal</button>
+          <button type="button" class="elimination-tab" data-round="final">Final</button>
+        </nav>
+        <div id="elimination-rounds" class="elimination-rounds"></div>
       </section>
     </main>
 
@@ -77,14 +85,22 @@
         syncState: document.getElementById("sync-state"),
         syncTime: document.getElementById("sync-time"),
         groupsGrid: document.getElementById("groups-grid"),
-        eliminationBracket: document.getElementById("elimination-bracket"),
+        eliminationRounds: document.getElementById("elimination-rounds"),
         groupsStatus: document.getElementById("groups-status"),
         eventOrganization: document.getElementById("event-organization"),
         eventLocation: document.getElementById("event-location"),
         eventDate: document.getElementById("event-date"),
         refreshBtn: document.getElementById("refresh-data"),
+        eliminationTabs: document.querySelectorAll(".elimination-tab"),
         sections: document.querySelectorAll(".section-page"),
         menuLinks: document.querySelectorAll(".menu-link"),
+      };
+
+      let activeEliminationRound = "quarter";
+      let eliminationData = {
+        quarterFinals: [],
+        semiFinals: [],
+        finals: [],
       };
 
       const toText = (value) => String(value || "").trim();
@@ -144,18 +160,68 @@
         return "Programado";
       };
 
-      const matchCard = (title, match) => {
-        const article = document.createElement("article");
-        article.className = `match-card ${match.status}`;
-        article.innerHTML = `
-          <p class="match-title">${title}</p>
-          <p class="match-teams">${match.teamHome} <strong>${match.stateLabel}</strong> ${match.teamAway}</p>
-          <p class="match-status">${statusLabel(match.status)}</p>
-        `;
-        return article;
+      const matchInfoLabel = (match) => {
+        if (hasValue(match.time)) return toText(match.time);
+        if (match.played || toText(match.status).toLowerCase() === "finished") {
+          if (match.scoreHome === null && match.scoreAway === null) return "Sin resultado";
+          return `${match.scoreHome} - ${match.scoreAway}`;
+        }
+        if (toText(match.status).toLowerCase() === "live") return "En vivo";
+        return statusLabel(match.status);
       };
 
-      const buildGroupTable = (groupName, teams = []) => {
+      const teamPoints = (value) => {
+        const n = Number(value);
+        return Number.isFinite(n) ? Math.trunc(n) : 0;
+      };
+
+      const teamName = (teamObj = {}) => {
+        return toText(teamObj.name || teamObj.team || "Sin nombre");
+      };
+
+      const buildQualificationMap = (groups = {}) => {
+        const rankedByGroup = {};
+        const allTeams = [];
+
+        ["A", "B", "C"].forEach((groupCode) => {
+          const teams = Array.isArray(groups[groupCode]) ? groups[groupCode] : [];
+          const normalized = teams
+            .map((teamObj, index) => ({
+              name: teamName(teamObj),
+              points: teamPoints(teamObj?.points),
+              group: groupCode,
+              index,
+              qualify: null,
+            }))
+            .sort((a, b) => {
+              if (b.points !== a.points) return b.points - a.points;
+              return a.name.localeCompare(b.name);
+            });
+
+          normalized.forEach((team, position) => {
+            team.qualify = position < 2 ? "directo" : null;
+          });
+
+          rankedByGroup[groupCode] = normalized;
+          allTeams.push(...normalized);
+        });
+
+        allTeams
+          .filter((team) => team.qualify === null)
+          .sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            if (a.group !== b.group) return a.group.localeCompare(b.group);
+            return a.index - b.index;
+          })
+          .slice(0, 2)
+          .forEach((team) => {
+            team.qualify = "repechaje";
+          });
+
+        return rankedByGroup;
+      };
+
+      const buildGroupTable = (teams = []) => {
         const table = document.createElement("table");
         table.innerHTML = `
           <thead>
@@ -167,9 +233,11 @@
 
         teams.forEach((teamObj = {}) => {
           const tr = document.createElement("tr");
-          const name = toText(teamObj.name || teamObj.team || "Sin nombre");
-          const points = Number.isFinite(Number(teamObj.points)) ? Math.trunc(Number(teamObj.points)) : 0;
-          tr.innerHTML = `<td>${name}</td><td>${points}</td>`;
+          if (teamObj.qualify === "directo") tr.className = "team-qualified direct";
+          if (teamObj.qualify === "repechaje") tr.className = "team-qualified repechage";
+          if (teamObj.qualify === null) tr.className = "team-qualified eliminated";
+
+          tr.innerHTML = `<td>${teamObj.name}</td><td>${teamObj.points}</td>`;
           body.appendChild(tr);
         });
 
@@ -186,24 +254,97 @@
 
       const renderGroups = (groups = {}) => {
         UI.groupsGrid.replaceChildren();
+        const qualifiedGroups = buildQualificationMap(groups);
 
         ["A", "B", "C"].forEach((groupCode) => {
-          const teams = Array.isArray(groups[groupCode]) ? groups[groupCode] : [];
+          const teams = qualifiedGroups[groupCode] || [];
           const card = document.createElement("div");
           card.className = "group-card";
           card.innerHTML = `<h3>Grupo ${groupCode}</h3>`;
-          card.appendChild(buildGroupTable(`Grupo ${groupCode}`, teams));
+          card.appendChild(buildGroupTable(teams));
           UI.groupsGrid.appendChild(card);
         });
 
         UI.groupsStatus.textContent = "Clasificación de grupos actualizada.";
       };
 
+      const buildMatchRow = (match = {}) => {
+        const tr = document.createElement("tr");
+        tr.className = `match-row ${match.status}`;
+        tr.innerHTML = `
+          <td>${match.id}</td>
+          <td>${match.teamHome}</td>
+          <td>${match.teamAway}</td>
+          <td>${matchInfoLabel(match)}</td>
+          <td>${statusLabel(match.status)}</td>
+        `;
+        return tr;
+      };
+
+      const buildMatchTable = (title, matches = []) => {
+        const wrapper = document.createElement("section");
+        wrapper.className = "round-section";
+        wrapper.innerHTML = `<h3>${title}</h3>`;
+
+        const table = document.createElement("table");
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Partido</th>
+              <th>Local</th>
+              <th>Visitante</th>
+              <th>Resultado / Hora</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+        `;
+
+        const body = document.createElement("tbody");
+
+        matches.forEach((match) => body.appendChild(buildMatchRow(match)));
+        if (matches.length === 0) {
+          const tr = document.createElement("tr");
+          tr.className = "muted";
+          tr.innerHTML = `<td colspan="5">Sin partidos cargados.</td>`;
+          body.appendChild(tr);
+        }
+
+        table.appendChild(body);
+        wrapper.appendChild(table);
+        return wrapper;
+      };
+
+      const renderEliminationRound = (round = "quarter") => {
+        const titleMap = {
+          quarter: "Cuartos de final",
+          semi: "Semifinal",
+          final: "Final",
+        };
+
+        const activeRound = titleMap[round] ? round : "quarter";
+        UI.eliminationRounds.replaceChildren();
+
+        if (activeRound === "quarter") {
+          UI.eliminationRounds.appendChild(buildMatchTable(titleMap.quarter, eliminationData.quarterFinals));
+        } else if (activeRound === "semi") {
+          UI.eliminationRounds.appendChild(buildMatchTable(titleMap.semi, eliminationData.semiFinals));
+        } else {
+          UI.eliminationRounds.appendChild(buildMatchTable(titleMap.final, eliminationData.finals));
+        }
+
+        UI.eliminationTabs.forEach((tab) => {
+          const active = tab.dataset.round === activeRound;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", active ? "true" : "false");
+        });
+
+        activeEliminationRound = activeRound;
+      };
+
       const renderElimination = (elimination = {}) => {
         const quarter = Array.isArray(elimination.quarterFinals) ? elimination.quarterFinals : [];
         const semi = Array.isArray(elimination.semiFinals) ? elimination.semiFinals : [];
         const finalRaw = elimination.final || {};
-        const thirdRaw = elimination.thirdPlace || {};
 
         const qf = [];
         for (let i = 0; i < 4; i += 1) {
@@ -244,46 +385,13 @@
         finalMatch.teamHome = hasValue(finalRaw.teamHome) ? finalMatch.teamHome : sfLeftWinner;
         finalMatch.teamAway = hasValue(finalRaw.teamAway) ? finalMatch.teamAway : sfRightWinner;
 
-        const thirdMatch = normalizeMatch(thirdRaw, {
-          home: sfLeftLoser,
-          away: sfRightLoser,
-        });
-        thirdMatch.teamHome = hasValue(thirdRaw.teamHome) ? thirdMatch.teamHome : sfLeftLoser;
-        thirdMatch.teamAway = hasValue(thirdRaw.teamAway) ? thirdMatch.teamAway : sfRightLoser;
+        eliminationData = {
+          quarterFinals: qf,
+          semiFinals: [sfLeft, sfRight],
+          finals: [finalMatch],
+        };
 
-        const colQ1 = document.createElement("div");
-        colQ1.className = "bracket-col";
-        colQ1.innerHTML = `<h3>Cuartos 1</h3>`;
-        colQ1.appendChild(matchCard("Q1", qf[0]));
-        colQ1.appendChild(matchCard("Q2", qf[1]));
-
-        const colS1 = document.createElement("div");
-        colS1.className = "bracket-col";
-        colS1.innerHTML = `<h3>Semifinal 1</h3>`;
-        colS1.appendChild(matchCard("Semifinal 1", sfLeft));
-
-        const colF = document.createElement("div");
-        colF.className = "bracket-col center-col";
-        colF.innerHTML = `<h3>Final</h3>`;
-        colF.appendChild(matchCard("Final", finalMatch));
-        colF.appendChild(matchCard("Tercer y cuarto puesto", thirdMatch));
-
-        const colS2 = document.createElement("div");
-        colS2.className = "bracket-col";
-        colS2.innerHTML = `<h3>Semifinal 2</h3>`;
-        colS2.appendChild(matchCard("Semifinal 2", sfRight));
-
-        const colQ2 = document.createElement("div");
-        colQ2.className = "bracket-col";
-        colQ2.innerHTML = `<h3>Cuartos 2</h3>`;
-        colQ2.appendChild(matchCard("Q3", qf[2]));
-        colQ2.appendChild(matchCard("Q4", qf[3]));
-
-        const bracket = document.createElement("div");
-        bracket.className = "bracket bracket-5";
-        bracket.append(colQ1, colS1, colF, colS2, colQ2);
-
-        UI.eliminationBracket.replaceChildren(bracket);
+        renderEliminationRound(activeEliminationRound);
       };
 
       const renderEventData = (eventData = {}) => {
@@ -346,6 +454,12 @@
           const section = link.dataset.section;
           activateSection(section);
           history.replaceState(null, "", `#${section}`);
+        });
+      });
+
+      UI.eliminationTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          renderEliminationRound(tab.dataset.round);
         });
       });
 
