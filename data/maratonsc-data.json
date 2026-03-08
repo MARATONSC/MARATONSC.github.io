@@ -89,7 +89,7 @@
       "status": "scheduled"
     },
     "final": {
-      "id": "F",
+      "id": "FINAL",
       "teamHome": "",
       "teamAway": "",
       "scoreHome": null,
