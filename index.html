@@ -272,11 +272,11 @@
         const tr = document.createElement("tr");
         tr.className = `match-row ${match.status}`;
         tr.innerHTML = `
-          <td>${match.id}</td>
-          <td>${match.teamHome}</td>
-          <td>${match.teamAway}</td>
-          <td>${matchInfoLabel(match)}</td>
-          <td>${statusLabel(match.status)}</td>
+          <td data-label="Partido">${match.id}</td>
+          <td data-label="Local">${match.teamHome}</td>
+          <td data-label="Visitante">${match.teamAway}</td>
+          <td data-label="Resultado / Hora">${matchInfoLabel(match)}</td>
+          <td data-label="Estado">${statusLabel(match.status)}</td>
         `;
         return tr;
       };
@@ -287,6 +287,7 @@
         wrapper.innerHTML = `<h3>${title}</h3>`;
 
         const table = document.createElement("table");
+        table.className = "round-table";
         table.innerHTML = `
           <thead>
             <tr>
@@ -305,7 +306,7 @@
         if (matches.length === 0) {
           const tr = document.createElement("tr");
           tr.className = "muted";
-          tr.innerHTML = `<td colspan="5">Sin partidos cargados.</td>`;
+          tr.innerHTML = `<td class="empty-state" colspan="5">Sin partidos cargados.</td>`;
           body.appendChild(tr);
         }
 
