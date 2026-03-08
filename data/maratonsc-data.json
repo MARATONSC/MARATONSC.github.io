@@ -1,0 +1,100 @@
+{
+  "event": {
+    "organization": "Maratón SC",
+    "location": "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
+    "date": "25 y 26 de Julio"
+  },
+  "groups": {
+    "A": [
+      { "name": "Equipo A1", "points": 0 },
+      { "name": "Equipo A2", "points": 0 },
+      { "name": "Equipo A3", "points": 0 },
+      { "name": "Equipo A4", "points": 0 },
+      { "name": "Equipo A5", "points": 0 }
+    ],
+    "B": [
+      { "name": "Equipo B1", "points": 0 },
+      { "name": "Equipo B2", "points": 0 },
+      { "name": "Equipo B3", "points": 0 },
+      { "name": "Equipo B4", "points": 0 },
+      { "name": "Equipo B5", "points": 0 }
+    ],
+    "C": [
+      { "name": "Equipo C1", "points": 0 },
+      { "name": "Equipo C2", "points": 0 },
+      { "name": "Equipo C3", "points": 0 },
+      { "name": "Equipo C4", "points": 0 },
+      { "name": "Equipo C5", "points": 0 }
+    ]
+  },
+  "eliminatoria": {
+    "quarterFinals": [
+      {
+        "id": "Q1",
+        "teamHome": "",
+        "teamAway": "",
+        "scoreHome": null,
+        "scoreAway": null,
+        "status": "scheduled"
+      },
+      {
+        "id": "Q2",
+        "teamHome": "",
+        "teamAway": "",
+        "scoreHome": null,
+        "scoreAway": null,
+        "status": "scheduled"
+      },
+      {
+        "id": "Q3",
+        "teamHome": "",
+        "teamAway": "",
+        "scoreHome": null,
+        "scoreAway": null,
+        "status": "scheduled"
+      },
+      {
+        "id": "Q4",
+        "teamHome": "",
+        "teamAway": "",
+        "scoreHome": null,
+        "scoreAway": null,
+        "status": "scheduled"
+      }
+    ],
+    "semiFinals": [
+      {
+        "id": "S1",
+        "teamHome": "",
+        "teamAway": "",
+        "scoreHome": null,
+        "scoreAway": null,
+        "status": "scheduled"
+      },
+      {
+        "id": "S2",
+        "teamHome": "",
+        "teamAway": "",
+        "scoreHome": null,
+        "scoreAway": null,
+        "status": "scheduled"
+      }
+    ],
+    "thirdPlace": {
+      "id": "TP",
+      "teamHome": "",
+      "teamAway": "",
+      "scoreHome": null,
+      "scoreAway": null,
+      "status": "scheduled"
+    },
+    "final": {
+      "id": "F",
+      "teamHome": "",
+      "teamAway": "",
+      "scoreHome": null,
+      "scoreAway": null,
+      "status": "scheduled"
+    }
+  }
+}
