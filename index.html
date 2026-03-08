@@ -71,7 +71,7 @@
     </main>
 
     <footer>
-      Copyright © Maratón SC.
+      Todos los derechos reservados © Maratón SC.
     </footer>
 
     <script>
@@ -110,7 +110,7 @@
           teamAway: hasValue(match?.teamAway) ? toText(match.teamAway) : fallback.away,
           scoreHome: scoreValue(match?.scoreHome),
           scoreAway: scoreValue(match?.scoreAway),
-          status: toText(match?.status || "scheduled") || "scheduled",
+          status: toText(match?.status || "scheduled").toLowerCase() || "scheduled",
         };
 
         safe.played = safe.scoreHome !== null && safe.scoreAway !== null;
@@ -140,13 +140,21 @@
         return safe;
       };
 
+      const statusLabel = (status) => {
+        const normalized = toText(status).toLowerCase();
+        if (normalized === "live") return "En vivo";
+        if (normalized === "finished") return "Finalizado";
+        if (normalized === "scheduled") return "Programado";
+        return "Programado";
+      };
+
       const matchCard = (title, match) => {
         const article = document.createElement("article");
         article.className = `match-card ${match.status}`;
         article.innerHTML = `
           <p class="match-title">${title}</p>
           <p class="match-teams">${match.teamHome} <strong>${match.stateLabel}</strong> ${match.teamAway}</p>
-          <p class="match-status">${match.status}</p>
+          <p class="match-status">${statusLabel(match.status)}</p>
         `;
         return article;
       };
@@ -202,7 +210,6 @@
         const thirdRaw = elimination.thirdPlace || {};
 
         const qf = [];
-
         for (let i = 0; i < 4; i += 1) {
           qf[i] = normalizeMatch(quarter[i] || {}, {
             home: `Q${i + 1} Equipo 1`,
@@ -211,7 +218,6 @@
         }
 
         const qfWinners = qf.map((match, index) => match.winner || `Ganador Q${index + 1}`);
-        const qfLosers = qf.map((match, index) => match.loser || `Perdedor Q${index + 1}`);
 
         const sf0raw = semi[0] || {};
         const sf1raw = semi[1] || {};
@@ -239,42 +245,47 @@
           home: sfLeftWinner,
           away: sfRightWinner,
         });
+        finalMatch.teamHome = hasValue(finalRaw.teamHome) ? finalMatch.teamHome : sfLeftWinner;
+        finalMatch.teamAway = hasValue(finalRaw.teamAway) ? finalMatch.teamAway : sfRightWinner;
 
         const thirdMatch = normalizeMatch(thirdRaw, {
           home: sfLeftLoser,
           away: sfRightLoser,
         });
-
-        finalMatch.teamHome = hasValue(finalRaw.teamHome) ? finalMatch.teamHome : sfLeftWinner;
-        finalMatch.teamAway = hasValue(finalRaw.teamAway) ? finalMatch.teamAway : sfRightWinner;
         thirdMatch.teamHome = hasValue(thirdRaw.teamHome) ? thirdMatch.teamHome : sfLeftLoser;
         thirdMatch.teamAway = hasValue(thirdRaw.teamAway) ? thirdMatch.teamAway : sfRightLoser;
 
-        const leftSide = document.createElement("div");
-        leftSide.className = "bracket-side";
-        leftSide.innerHTML = `<h3>Lado izquierdo</h3>`;
-        leftSide.appendChild(matchCard("Cuartos 1", qf[0]));
-        leftSide.appendChild(matchCard("Cuartos 2", qf[1]));
-        leftSide.appendChild(matchCard("Semifinal 1", sfLeft));
+        const colQ1 = document.createElement("div");
+        colQ1.className = "bracket-col";
+        colQ1.innerHTML = `<h3>Cuartos 1</h3>`;
+        colQ1.appendChild(matchCard("Q1", qf[0]));
+        colQ1.appendChild(matchCard("Q2", qf[1]));
 
-        const center = document.createElement("div");
-        center.className = "bracket-center";
-        center.innerHTML = `<h3>Ronda final</h3>`;
-        center.appendChild(matchCard("Tercer y cuarto puesto", thirdMatch));
-        center.appendChild(matchCard("Final", finalMatch));
+        const colS1 = document.createElement("div");
+        colS1.className = "bracket-col";
+        colS1.innerHTML = `<h3>Semifinal 1</h3>`;
+        colS1.appendChild(matchCard("Semifinal 1", sfLeft));
 
-        const rightSide = document.createElement("div");
-        rightSide.className = "bracket-side";
-        rightSide.innerHTML = `<h3>Lado derecho</h3>`;
-        rightSide.appendChild(matchCard("Cuartos 3", qf[2]));
-        rightSide.appendChild(matchCard("Cuartos 4", qf[3]));
-        rightSide.appendChild(matchCard("Semifinal 2", sfRight));
+        const colF = document.createElement("div");
+        colF.className = "bracket-col center-col";
+        colF.innerHTML = `<h3>Final</h3>`;
+        colF.appendChild(matchCard("Final", finalMatch));
+        colF.appendChild(matchCard("Tercer y cuarto puesto", thirdMatch));
+
+        const colS2 = document.createElement("div");
+        colS2.className = "bracket-col";
+        colS2.innerHTML = `<h3>Semifinal 2</h3>`;
+        colS2.appendChild(matchCard("Semifinal 2", sfRight));
+
+        const colQ2 = document.createElement("div");
+        colQ2.className = "bracket-col";
+        colQ2.innerHTML = `<h3>Cuartos 2</h3>`;
+        colQ2.appendChild(matchCard("Q3", qf[2]));
+        colQ2.appendChild(matchCard("Q4", qf[3]));
 
         const bracket = document.createElement("div");
-        bracket.className = "bracket";
-        bracket.appendChild(leftSide);
-        bracket.appendChild(center);
-        bracket.appendChild(rightSide);
+        bracket.className = "bracket bracket-5";
+        bracket.append(colQ1, colS1, colF, colS2, colQ2);
 
         UI.eliminationBracket.replaceChildren(bracket);
       };
