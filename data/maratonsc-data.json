@@ -30,7 +30,7 @@
   "eliminatoria": {
     "quarterFinals": [
       {
-        "id": "Q1",
+        "id": "1º CUARTO",
         "teamHome": "",
         "teamAway": "",
         "scoreHome": null,
@@ -38,7 +38,7 @@
         "status": "scheduled"
       },
       {
-        "id": "Q2",
+        "id": "2º CUARTO",
         "teamHome": "",
         "teamAway": "",
         "scoreHome": null,
@@ -46,7 +46,7 @@
         "status": "scheduled"
       },
       {
-        "id": "Q3",
+        "id": "3º CUARTO",
         "teamHome": "",
         "teamAway": "",
         "scoreHome": null,
@@ -54,7 +54,7 @@
         "status": "scheduled"
       },
       {
-        "id": "Q4",
+        "id": "4º CUARTO",
         "teamHome": "",
         "teamAway": "",
         "scoreHome": null,
@@ -64,7 +64,7 @@
     ],
     "semiFinals": [
       {
-        "id": "S1",
+        "id": "1ª SEMIFINAL",
         "teamHome": "",
         "teamAway": "",
         "scoreHome": null,
@@ -72,7 +72,7 @@
         "status": "scheduled"
       },
       {
-        "id": "S2",
+        "id": "2ª SEMIFINAL",
         "teamHome": "",
         "teamAway": "",
         "scoreHome": null,
