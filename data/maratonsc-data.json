@@ -6,11 +6,11 @@
   },
   "groups": {
     "A": [
-      { "name": "Equipo A1", "points": 0 },
-      { "name": "Equipo A2", "points": 0 },
-      { "name": "Equipo A3", "points": 0 },
-      { "name": "Equipo A4", "points": 0 },
-      { "name": "Equipo A5", "points": 0 }
+      { "name": "MURCIELAGO", "points": 6 },
+      { "name": "Equipo A2", "points": 3},
+      { "name": "Equipo A3", "points": 10 },
+      { "name": "Equipo A4", "points": 2},
+      { "name": "Equipo A5", "points": 1}
     ],
     "B": [
       { "name": "Equipo B1", "points": 0 },
