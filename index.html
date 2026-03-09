@@ -874,6 +874,16 @@
         });
       });
 
+      document.querySelectorAll(".quick-tile").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          const section = new URL(link.getAttribute("href"), window.location.href).hash.replace("#", "");
+          if (!section) return;
+          activateSection(section);
+          history.replaceState(null, "", `#${section}`);
+        });
+      });
+
       UI.eliminationTabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           renderEliminationRound(tab.dataset.round);
