@@ -34,6 +34,13 @@
     <main>
       <section id="inicio" class="panel section-page is-visible">
         <h2>Inicio</h2>
+        <article class="next-matches">
+          <h3>Próximos partidos</h3>
+          <ul id="upcoming-matches" class="next-matches-list">
+            <li class="muted">Sin partidos programados por el momento.</li>
+          </ul>
+          <button id="upcoming-more" type="button" class="next-toggle is-hidden">Ver más</button>
+        </article>
         <article class="info-grid">
           <div>
             <h3>Organización</h3>
@@ -48,20 +55,10 @@
             <p id="event-date">-</p>
           </div>
         </article>
-        <article class="next-matches">
-          <h3>Próximos partidos</h3>
-          <ul id="upcoming-matches" class="next-matches-list">
-            <li class="muted">Sin partidos programados por el momento.</li>
-          </ul>
-          <button id="upcoming-more" type="button" class="next-toggle is-hidden">Ver más</button>
-        </article>
       </section>
 
       <section id="grupos" class="panel section-page">
-        <div class="panel-head">
-          <h2>Fase de grupos</h2>
-          <button id="refresh-data" type="button">Actualizar datos</button>
-        </div>
+        <h2>Fase de grupos</h2>
         <p class="small" id="groups-status">Cargando clasificación de grupos…</p>
         <div id="groups-grid" class="groups-grid"></div>
       </section>
@@ -114,7 +111,6 @@
         upcomingMatches: document.getElementById("upcoming-matches"),
         upcomingMoreBtn: document.getElementById("upcoming-more"),
         scheduleView: document.getElementById("schedule-view"),
-        refreshBtn: document.getElementById("refresh-data"),
         eliminationTabs: document.querySelectorAll(".elimination-tab"),
         sections: document.querySelectorAll(".section-page"),
         menuLinks: document.querySelectorAll(".menu-link"),
@@ -849,7 +845,6 @@
         });
       });
 
-      UI.refreshBtn.addEventListener("click", loadData);
       UI.upcomingMoreBtn.addEventListener("click", () => {
         const expanded = UI.upcomingMoreBtn.dataset.expanded === "true";
         UI.upcomingMoreBtn.dataset.expanded = expanded ? "false" : "true";
