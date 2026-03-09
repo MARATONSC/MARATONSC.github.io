@@ -115,24 +115,48 @@
         return Number.isFinite(n) ? Math.trunc(n) : null;
       };
 
+      const pickField = (obj = {}, keys = [], fallback = undefined) => {
+        for (const key of keys) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) return obj[key];
+        }
+        return fallback;
+      };
+
       const normalizeMatch = (match = {}, fallback) => {
+        const rawStatus = toText(pickField(match, ["estado", "status"], "Programado"));
+        const partido = toText(
+          pickField(match, ["partido", "id", "matchId", "encuentro"], fallback?.partido || ""),
+        );
+        const local = pickField(match, ["local", "teamHome", "equipoLocal", "home"], fallback?.home || "");
+        const visitante = pickField(
+          match,
+          ["visitante", "teamAway", "equipoVisitante", "away"],
+          fallback?.away || "",
+        );
+        const golesLocal = scoreValue(pickField(match, ["golesLocal", "scoreHome", "golesCasa"], null));
+        const golesVisitante = scoreValue(
+          pickField(match, ["golesVisitante", "scoreAway", "golesFuera"], null),
+        );
+        const horario = toText(pickField(match, ["hora", "time", "horario"], ""));
         const safe = {
           ...match,
-          teamHome: hasValue(match?.teamHome) ? toText(match.teamHome) : fallback.home,
-          teamAway: hasValue(match?.teamAway) ? toText(match.teamAway) : fallback.away,
-          scoreHome: scoreValue(match?.scoreHome),
-          scoreAway: scoreValue(match?.scoreAway),
-          status: toText(match?.status || "scheduled").toLowerCase() || "scheduled",
+          partido,
+          local: hasValue(local) ? toText(local) : fallback?.home || "",
+          visitante: hasValue(visitante) ? toText(visitante) : fallback?.away || "",
+          golesLocal,
+          golesVisitante,
+          estado: rawStatus || "Programado",
+          hora: horario,
         };
 
-        safe.played = safe.scoreHome !== null && safe.scoreAway !== null;
+        safe.played = safe.golesLocal !== null && safe.golesVisitante !== null;
 
-        if (safe.scoreHome > safe.scoreAway) {
-          safe.winner = safe.teamHome;
-          safe.loser = safe.teamAway;
-        } else if (safe.scoreHome < safe.scoreAway) {
-          safe.winner = safe.teamAway;
-          safe.loser = safe.teamHome;
+        if (safe.golesLocal > safe.golesVisitante) {
+          safe.winner = safe.local;
+          safe.loser = safe.visitante;
+        } else if (safe.golesLocal < safe.golesVisitante) {
+          safe.winner = safe.visitante;
+          safe.loser = safe.local;
         } else if (safe.played) {
           safe.winner = "Empate";
           safe.loser = "Empate";
@@ -141,33 +165,24 @@
           safe.loser = null;
         }
 
-        if (safe.status === "live") {
-          safe.stateLabel = "En curso";
-        } else if (safe.played) {
-          safe.stateLabel = `${safe.scoreHome} - ${safe.scoreAway}`;
-        } else {
-          safe.stateLabel = "Programado";
-        }
-
         return safe;
       };
 
-      const statusLabel = (status) => {
-        const normalized = toText(status).toLowerCase();
-        if (normalized === "live") return "En vivo";
-        if (normalized === "finished") return "Finalizado";
-        if (normalized === "scheduled") return "Programado";
+      const matchInfoLabel = (match) => {
+        if (match.estado === "Finalizado") {
+          if (match.golesLocal === null && match.golesVisitante === null) return "Sin resultado";
+          return `${match.golesLocal} - ${match.golesVisitante}`;
+        }
+        if (match.estado === "Disputando") {
+          if (match.golesLocal === null && match.golesVisitante === null) return "Sin resultado";
+          return `${match.golesLocal} - ${match.golesVisitante}`;
+        }
         return "Programado";
       };
 
-      const matchInfoLabel = (match) => {
-        if (hasValue(match.time)) return toText(match.time);
-        if (match.played || toText(match.status).toLowerCase() === "finished") {
-          if (match.scoreHome === null && match.scoreAway === null) return "Sin resultado";
-          return `${match.scoreHome} - ${match.scoreAway}`;
-        }
-        if (toText(match.status).toLowerCase() === "live") return "En vivo";
-        return statusLabel(match.status);
+      const matchTimeLabel = (match) => {
+        if (hasValue(match.hora)) return toText(match.hora);
+        return "Sin horario definido";
       };
 
       const teamPoints = (value) => {
@@ -176,7 +191,9 @@
       };
 
       const teamName = (teamObj = {}) => {
-        return toText(teamObj.name || teamObj.team || "Sin nombre");
+        return toText(
+          pickField(teamObj, ["nombre", "name", "equipo", "team"], "Sin nombre"),
+        );
       };
 
       const buildQualificationMap = (groups = {}) => {
@@ -185,14 +202,14 @@
 
         ["A", "B", "C"].forEach((groupCode) => {
           const teams = Array.isArray(groups[groupCode]) ? groups[groupCode] : [];
-          const normalized = teams
-            .map((teamObj, index) => ({
-              name: teamName(teamObj),
-              points: teamPoints(teamObj?.points),
-              group: groupCode,
-              index,
-              qualify: null,
-            }))
+        const normalized = teams
+          .map((teamObj, index) => ({
+            name: teamName(teamObj),
+            points: teamPoints(pickField(teamObj, ["puntos", "points"], 0)),
+            group: groupCode,
+            index,
+            qualify: null,
+          }))
             .sort((a, b) => {
               if (b.points !== a.points) return b.points - a.points;
               return a.name.localeCompare(b.name);
@@ -270,13 +287,13 @@
 
       const buildMatchRow = (match = {}) => {
         const tr = document.createElement("tr");
-        tr.className = `match-row ${match.status}`;
+        tr.className = `match-row ${match.estado || "Programado"}`;
         tr.innerHTML = `
-          <td data-label="Partido">${match.id}</td>
-          <td data-label="Local">${match.teamHome}</td>
-          <td data-label="Visitante">${match.teamAway}</td>
-          <td data-label="Resultado / Hora">${matchInfoLabel(match)}</td>
-          <td data-label="Estado">${statusLabel(match.status)}</td>
+          <td data-label="Equipo 1">${match.local}</td>
+          <td data-label="Equipo 2">${match.visitante}</td>
+          <td data-label="Horario">${matchTimeLabel(match)}</td>
+          <td data-label="Resultado">${matchInfoLabel(match)}</td>
+          <td data-label="Estado">${toText(match.estado) || "Programado"}</td>
         `;
         return tr;
       };
@@ -291,10 +308,10 @@
         table.innerHTML = `
           <thead>
             <tr>
-              <th>Partido</th>
-              <th>Local</th>
-              <th>Visitante</th>
-              <th>Resultado / Hora</th>
+              <th>Equipo 1</th>
+              <th>Equipo 2</th>
+              <th>Horario</th>
+              <th>Resultado</th>
               <th>Estado</th>
             </tr>
           </thead>
@@ -330,7 +347,13 @@
         } else if (activeRound === "semi") {
           UI.eliminationRounds.appendChild(buildMatchTable(titleMap.semi, eliminationData.semiFinals));
         } else {
-          UI.eliminationRounds.appendChild(buildMatchTable(titleMap.final, eliminationData.finals));
+          const [championshipMatch, thirdPlaceMatch] = eliminationData.finals || [];
+          UI.eliminationRounds.appendChild(
+            buildMatchTable("Partido final del campeonato", championshipMatch ? [championshipMatch] : []),
+          );
+          UI.eliminationRounds.appendChild(
+            buildMatchTable("Partido por 3.º y 4.º puesto", thirdPlaceMatch ? [thirdPlaceMatch] : []),
+          );
         }
 
         UI.eliminationTabs.forEach((tab) => {
@@ -343,13 +366,28 @@
       };
 
       const renderElimination = (elimination = {}) => {
-        const quarter = Array.isArray(elimination.quarterFinals) ? elimination.quarterFinals : [];
-        const semi = Array.isArray(elimination.semiFinals) ? elimination.semiFinals : [];
+        const quarter = Array.isArray(elimination.cuartosDeFinal)
+          ? elimination.cuartosDeFinal
+          : Array.isArray(elimination.quartersFinals)
+            ? elimination.quartersFinals
+            : Array.isArray(elimination.quarterFinals)
+              ? elimination.quarterFinals
+              : [];
+
+        const semi = Array.isArray(elimination.semifinales)
+          ? elimination.semifinales
+          : Array.isArray(elimination.semiFinals)
+            ? elimination.semiFinals
+            : Array.isArray(elimination.semis)
+              ? elimination.semis
+              : [];
         const finalRaw = elimination.final || {};
+        const thirdRaw = elimination.tercerPuesto || elimination.thirdPlace || {};
 
         const qf = [];
         for (let i = 0; i < 4; i += 1) {
           qf[i] = normalizeMatch(quarter[i] || {}, {
+            partido: `Q${i + 1}`,
             home: `Q${i + 1} Equipo 1`,
             away: `Q${i + 1} Equipo 2`,
           });
@@ -361,18 +399,24 @@
         const sf1raw = semi[1] || {};
 
         const sfLeft = normalizeMatch(sf0raw, {
+          partido: "S1",
           home: qfWinners[0],
           away: qfWinners[1],
         });
         const sfRight = normalizeMatch(sf1raw, {
+          partido: "S2",
           home: qfWinners[2],
           away: qfWinners[3],
         });
 
-        sfLeft.teamHome = hasValue(sf0raw.teamHome) ? sfLeft.teamHome : qfWinners[0];
-        sfLeft.teamAway = hasValue(sf0raw.teamAway) ? sfLeft.teamAway : qfWinners[1];
-        sfRight.teamHome = hasValue(sf1raw.teamHome) ? sfRight.teamHome : qfWinners[2];
-        sfRight.teamAway = hasValue(sf1raw.teamAway) ? sfRight.teamAway : qfWinners[3];
+        sfLeft.local = hasValue(sf0raw.local || sf0raw.teamHome) ? sfLeft.local : qfWinners[0];
+        sfLeft.visitante = hasValue(sf0raw.visitante || sf0raw.teamAway)
+          ? sfLeft.visitante
+          : qfWinners[1];
+        sfRight.local = hasValue(sf1raw.local || sf1raw.teamHome) ? sfRight.local : qfWinners[2];
+        sfRight.visitante = hasValue(sf1raw.visitante || sf1raw.teamAway)
+          ? sfRight.visitante
+          : qfWinners[3];
 
         const sfLeftWinner = sfLeft.winner || `Ganador SF1`;
         const sfLeftLoser = sfLeft.loser || `Perdedor SF1`;
@@ -380,27 +424,52 @@
         const sfRightLoser = sfRight.loser || `Perdedor SF2`;
 
         const finalMatch = normalizeMatch(finalRaw, {
+          partido: "F",
           home: sfLeftWinner,
           away: sfRightWinner,
         });
-        finalMatch.teamHome = hasValue(finalRaw.teamHome) ? finalMatch.teamHome : sfLeftWinner;
-        finalMatch.teamAway = hasValue(finalRaw.teamAway) ? finalMatch.teamAway : sfRightWinner;
+        finalMatch.local = hasValue(finalRaw.local || finalRaw.teamHome)
+          ? finalMatch.local
+          : sfLeftWinner;
+        finalMatch.visitante = hasValue(finalRaw.visitante || finalRaw.teamAway)
+          ? finalMatch.visitante
+          : sfRightWinner;
+
+        const thirdMatch = normalizeMatch(thirdRaw, {
+          partido: "TP",
+          home: sfLeftLoser,
+          away: sfRightLoser,
+        });
+        thirdMatch.local = hasValue(thirdRaw.local || thirdRaw.teamHome)
+          ? thirdMatch.local
+          : sfLeftLoser;
+        thirdMatch.visitante = hasValue(thirdRaw.visitante || thirdRaw.teamAway)
+          ? thirdMatch.visitante
+          : sfRightLoser;
 
         eliminationData = {
           quarterFinals: qf,
           semiFinals: [sfLeft, sfRight],
-          finals: [finalMatch],
+          finals: [finalMatch, thirdMatch],
         };
 
         renderEliminationRound(activeEliminationRound);
       };
 
       const renderEventData = (eventData = {}) => {
-        UI.eventOrganization.textContent = toText(eventData.organization || "Maratón SC");
-        UI.eventLocation.textContent = toText(
-          eventData.location || "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
+        UI.eventOrganization.textContent = toText(
+          pickField(eventData, ["organizacion", "organization"], "Maratón SC"),
         );
-        UI.eventDate.textContent = toText(eventData.date || "25 y 26 de Julio");
+        UI.eventLocation.textContent = toText(
+          pickField(
+            eventData,
+            ["lugar", "location", "direccion"],
+            "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
+          ),
+        );
+        UI.eventDate.textContent = toText(
+          pickField(eventData, ["fecha", "date"], "25 y 26 de Julio"),
+        );
       };
 
       const syncStatus = (ok) => {
@@ -419,8 +488,8 @@
           if (!response.ok) throw new Error("No se pudo leer el archivo");
           const raw = await response.json();
 
-          renderEventData(raw.event || {});
-          renderGroups(raw.groups || {});
+          renderEventData(raw.evento || raw.event || {});
+          renderGroups(raw.grupos || raw.groups || {});
           renderElimination(raw.eliminatoria || raw.elimination || {});
 
           syncStatus(true);

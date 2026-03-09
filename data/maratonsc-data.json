@@ -1,100 +1,108 @@
 {
-  "event": {
-    "organization": "Maratón SC",
-    "location": "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
-    "date": "25 y 26 de Julio"
+  "evento": {
+    "organizacion": "Maratón SC",
+    "lugar": "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
+    "fecha": "25 y 26 de Julio"
   },
-  "groups": {
+  "grupos": {
     "A": [
-      { "name": "MURCIELAGO", "points": 6 },
-      { "name": "Equipo A2", "points": 3},
-      { "name": "Equipo A3", "points": 10 },
-      { "name": "Equipo A4", "points": 2},
-      { "name": "Equipo A5", "points": 1}
+      { "nombre": "MURCIELAGO", "puntos": 6 },
+      { "nombre": "Equipo A2", "puntos": 3 },
+      { "nombre": "Equipo A3", "puntos": 10 },
+      { "nombre": "Equipo A4", "puntos": 2 },
+      { "nombre": "Equipo A5", "puntos": 1 }
     ],
     "B": [
-      { "name": "Equipo B1", "points": 0 },
-      { "name": "Equipo B2", "points": 0 },
-      { "name": "Equipo B3", "points": 0 },
-      { "name": "Equipo B4", "points": 0 },
-      { "name": "Equipo B5", "points": 0 }
+      { "nombre": "Equipo B1", "puntos": 0 },
+      { "nombre": "Equipo B2", "puntos": 0 },
+      { "nombre": "Equipo B3", "puntos": 0 },
+      { "nombre": "Equipo B4", "puntos": 0 },
+      { "nombre": "Equipo B5", "puntos": 0 }
     ],
     "C": [
-      { "name": "Equipo C1", "points": 0 },
-      { "name": "Equipo C2", "points": 0 },
-      { "name": "Equipo C3", "points": 0 },
-      { "name": "Equipo C4", "points": 0 },
-      { "name": "Equipo C5", "points": 0 }
+      { "nombre": "Equipo C1", "puntos": 0 },
+      { "nombre": "Equipo C2", "puntos": 0 },
+      { "nombre": "Equipo C3", "puntos": 0 },
+      { "nombre": "Equipo C4", "puntos": 0 },
+      { "nombre": "Equipo C5", "puntos": 0 }
     ]
   },
   "eliminatoria": {
-    "quarterFinals": [
+    "cuartosDeFinal": [
       {
-        "id": "Q1",
-        "teamHome": "",
-        "teamAway": "",
-        "scoreHome": null,
-        "scoreAway": null,
-        "status": "scheduled"
+        "partido": "Q1",
+        "local": "",
+        "visitante": "",
+        "hora": "",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
       },
       {
-        "id": "Q2",
-        "teamHome": "",
-        "teamAway": "",
-        "scoreHome": null,
-        "scoreAway": null,
-        "status": "scheduled"
+        "partido": "Q2",
+        "local": "",
+        "visitante": "",
+        "hora": "",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
       },
       {
-        "id": "Q3",
-        "teamHome": "",
-        "teamAway": "",
-        "scoreHome": null,
-        "scoreAway": null,
-        "status": "scheduled"
+        "partido": "Q3",
+        "local": "",
+        "visitante": "",
+        "hora": "",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
       },
       {
-        "id": "Q4",
-        "teamHome": "",
-        "teamAway": "",
-        "scoreHome": null,
-        "scoreAway": null,
-        "status": "scheduled"
+        "partido": "Q4",
+        "local": "",
+        "visitante": "",
+        "hora": "",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
       }
     ],
-    "semiFinals": [
+    "semifinales": [
       {
-        "id": "S1",
-        "teamHome": "",
-        "teamAway": "",
-        "scoreHome": null,
-        "scoreAway": null,
-        "status": "scheduled"
+        "partido": "S1",
+        "local": "",
+        "visitante": "",
+        "hora": "",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
       },
       {
-        "id": "S2",
-        "teamHome": "",
-        "teamAway": "",
-        "scoreHome": null,
-        "scoreAway": null,
-        "status": "scheduled"
+        "partido": "S2",
+        "local": "",
+        "visitante": "",
+        "hora": "",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
       }
     ],
-    "thirdPlace": {
-      "id": "TP",
-      "teamHome": "",
-      "teamAway": "",
-      "scoreHome": null,
-      "scoreAway": null,
-      "status": "scheduled"
+    "tercerPuesto": {
+      "partido": "F2",
+      "local": "",
+      "visitante": "",
+      "hora": "",
+      "golesLocal": null,
+      "golesVisitante": null,
+      "estado": "Programado"
     },
     "final": {
-      "id": "F",
-      "teamHome": "",
-      "teamAway": "",
-      "scoreHome": null,
-      "scoreAway": null,
-      "status": "scheduled"
+      "partido": "F1",
+      "local": "",
+      "visitante": "",
+      "hora": "",
+      "golesLocal": null,
+      "golesVisitante": null,
+      "estado": "Programado"
     }
   }
 }

@@ -302,15 +302,20 @@ td:nth-child(2) {
   color: #7f1d1d;
 }
 
-.match-row.finished td:first-child {
+.round-table td[data-label="Equipo 2"] {
+  text-align: left;
+  font-weight: 400;
+}
+
+.match-row.Finalizado td:first-child {
   border-left: 4px solid var(--ok);
 }
 
-.match-row.live td:first-child {
+.match-row.Disputando td:first-child {
   border-left: 4px solid var(--warn);
 }
 
-.match-row.scheduled td:first-child {
+.match-row.Programado td:first-child {
   border-left: 4px solid #94a3b8;
 }
 
