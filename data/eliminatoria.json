@@ -1,0 +1,96 @@
+{
+  "eliminatoria": {
+    "cuartosDeFinal": [
+      {
+        "partido": "1ºA VS 2ºRes",
+        "fase": "Cuartos de final",
+        "local": "1ºA",
+        "visitante": "2ºRes",
+        "fecha": "2026-07-25",
+        "hora": "09:00",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
+      },
+      {
+        "partido": "Q2",
+        "fase": "Cuartos de final",
+        "local": "",
+        "visitante": "",
+        "fecha": "2026-07-25",
+        "hora": "09:45",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
+      },
+      {
+        "partido": "Q3",
+        "fase": "Cuartos de final",
+        "local": "",
+        "visitante": "",
+        "fecha": "2026-07-25",
+        "hora": "10:30",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
+      },
+      {
+        "partido": "Q4",
+        "fase": "Cuartos de final",
+        "local": "",
+        "visitante": "",
+        "fecha": "2026-07-25",
+        "hora": "11:15",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
+      }
+    ],
+    "semifinales": [
+      {
+        "partido": "S1",
+        "fase": "Semifinal",
+        "local": "",
+        "visitante": "",
+        "fecha": "2026-07-25",
+        "hora": "18:00",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
+      },
+      {
+        "partido": "S2",
+        "fase": "Semifinal",
+        "local": "",
+        "visitante": "",
+        "fecha": "2026-07-26",
+        "hora": "18:45",
+        "golesLocal": null,
+        "golesVisitante": null,
+        "estado": "Programado"
+      }
+    ],
+    "tercerPuesto": {
+      "partido": "F2",
+      "fase": "3.º y 4.º puesto",
+      "local": "",
+      "visitante": "",
+      "fecha": "2026-07-26",
+      "hora": "10:00",
+      "golesLocal": null,
+      "golesVisitante": null,
+      "estado": "Programado"
+    },
+    "final": {
+      "partido": "F1",
+      "fase": "Final",
+      "local": "",
+      "visitante": "",
+      "fecha": "2026-07-26",
+      "hora": "10:30",
+      "golesLocal": null,
+      "golesVisitante": null,
+      "estado": "Programado"
+    }
+  }
+}

@@ -28,6 +28,7 @@
       <a href="#inicio" class="menu-link is-active" data-section="inicio">Inicio</a>
       <a href="#grupos" class="menu-link" data-section="grupos">Fase de grupos</a>
       <a href="#eliminatoria" class="menu-link" data-section="eliminatoria">Fase eliminatoria</a>
+      <a href="#programacion" class="menu-link" data-section="programacion">Programación</a>
     </nav>
 
     <main>
@@ -71,10 +72,16 @@
         </div>
         <nav class="elimination-subnav" aria-label="Rondas de la fase eliminatoria">
           <button type="button" class="elimination-tab is-active" data-round="quarter">Cuartos de final</button>
+          <button type="button" class="elimination-tab" data-round="third">3º y 4º</button>
           <button type="button" class="elimination-tab" data-round="semi">Semifinal</button>
           <button type="button" class="elimination-tab" data-round="final">Final</button>
         </nav>
         <div id="elimination-rounds" class="elimination-rounds"></div>
+      </section>
+
+      <section id="programacion" class="panel section-page">
+        <h2>Programación</h2>
+        <div id="schedule-view" class="schedule-view"></div>
       </section>
     </main>
 
@@ -93,7 +100,8 @@
 
     <script>
       const UI = {
-        dataFile: "data/maratonsc-data.json",
+        groupsDataFile: "data/grupos.json",
+        eliminationDataFile: "data/eliminatoria.json",
         refreshMs: 15000,
         groupsGrid: document.getElementById("groups-grid"),
         eliminationRounds: document.getElementById("elimination-rounds"),
@@ -103,6 +111,7 @@
         eventDate: document.getElementById("event-date"),
         upcomingMatches: document.getElementById("upcoming-matches"),
         upcomingMoreBtn: document.getElementById("upcoming-more"),
+        scheduleView: document.getElementById("schedule-view"),
         refreshBtn: document.getElementById("refresh-data"),
         eliminationTabs: document.querySelectorAll(".elimination-tab"),
         sections: document.querySelectorAll(".section-page"),
@@ -114,7 +123,9 @@
         quarterFinals: [],
         semiFinals: [],
         finals: [],
+        thirdPlace: [],
       };
+      let groupMatches = [];
 
       const toText = (value) => String(value || "").trim();
 
@@ -128,6 +139,12 @@
         return Number.isFinite(n) ? Math.trunc(n) : null;
       };
 
+      const normalizeMatchStatus = (status = "Programado") => {
+        const current = toText(status);
+        if (current === "Disputando" || current === "Finalizado") return current;
+        return "Programado";
+      };
+
       const pickField = (obj = {}, keys = [], fallback = undefined) => {
         for (const key of keys) {
           if (Object.prototype.hasOwnProperty.call(obj, key)) return obj[key];
@@ -136,7 +153,7 @@
       };
 
       const normalizeMatch = (match = {}, fallback) => {
-        const rawStatus = toText(pickField(match, ["estado", "status"], "Programado"));
+        const rawStatus = normalizeMatchStatus(pickField(match, ["estado", "status"], "Programado"));
         const partido = toText(
           pickField(match, ["partido", "id", "matchId", "encuentro"], fallback?.partido || ""),
         );
@@ -159,6 +176,7 @@
           golesLocal,
           golesVisitante,
           estado: rawStatus || "Programado",
+          fase: toText(pickField(match, ["fase", "faseCompeticion", "faseNombre", "ronda"], "")),
           hora: horario,
         };
 
@@ -446,6 +464,114 @@
         UI.groupsStatus.textContent = "Clasificación de grupos actualizada.";
       };
 
+      const getGroupMatchList = (groupsData = {}) => {
+        const rawList = pickField(groupsData, ["partidos", "partidosFaseGrupos", "partidosGrupos", "fixtures"], []);
+        const groupMap = pickField(groupsData, ["partidosPorGrupo", "partidosGruposPorGrupo"], {});
+        const matches = [];
+
+        if (Array.isArray(rawList)) {
+          rawList.forEach((match) => matches.push(match));
+        } else if (Array.isArray(groupMap)) {
+          groupMap.forEach((match) => matches.push(match));
+        } else if (groupMap && typeof groupMap === "object") {
+          Object.entries(groupMap).forEach(([groupCode, groupMatches]) => {
+            if (Array.isArray(groupMatches)) {
+              groupMatches.forEach((match) =>
+                matches.push({
+                  ...match,
+                  grupo: groupCode,
+                }),
+              );
+            }
+          });
+        }
+
+        return matches
+          .map((match) =>
+            normalizeMatch(
+              {
+                ...match,
+                fase: hasValue(match.fase) ? match.fase : `Grupo ${toText(match.grupo || "Sin grupo")}`,
+              },
+              {},
+            ),
+          )
+          .sort(compareMatchDateTime);
+      };
+
+      const buildScheduleItem = (match = {}) => {
+        const result = matchInfoLabel(match);
+        const localTeam = hasValue(match.local) ? match.local : "Por definir";
+        const awayTeam = hasValue(match.visitante) ? match.visitante : "Por definir";
+        const matchPhase = hasValue(match.fase) ? match.fase : hasValue(match.ronda) ? match.ronda : "Sin fase";
+        const info = match.estado === "Programado" ? "Programado" : result;
+
+        const tr = document.createElement("div");
+        tr.className = "schedule-item";
+        tr.innerHTML = `
+          <span class="schedule-team">${matchPhase}</span>
+          <span class="schedule-match">${localTeam} vs ${awayTeam}</span>
+          <span class="schedule-meta">
+            <span>${formatDateTimeLabel(match)}</span>
+            <span>·</span>
+            <span>${info}</span>
+          </span>
+        `;
+        return tr;
+      };
+
+      const renderProgramacion = () => {
+        UI.scheduleView.replaceChildren();
+
+        const allMatches = [
+          ...groupMatches,
+          ...(eliminationData.quarterFinals || []),
+          ...(eliminationData.semiFinals || []),
+          ...(eliminationData.finals || []),
+          ...(eliminationData.thirdPlace || []),
+        ];
+
+        const matchGroups = {
+          Disputando: [],
+          Finalizado: [],
+          Programado: [],
+        };
+
+        allMatches.forEach((match) => {
+          const status = match.estado === "Disputando" || match.estado === "Finalizado" ? match.estado : "Programado";
+          matchGroups[status].push(match);
+        });
+
+        const statusOrder = ["Disputando", "Programado", "Finalizado"];
+
+        statusOrder.forEach((status) => {
+          const section = document.createElement("section");
+          section.className = "schedule-status";
+
+          const heading = document.createElement("h3");
+          heading.textContent = status;
+          section.appendChild(heading);
+
+          const list = document.createElement("div");
+          list.className = "schedule-list";
+
+          const matches = matchGroups[status];
+          if (matches.length === 0) {
+            const empty = document.createElement("p");
+            empty.className = "muted";
+            empty.textContent = "Sin partidos en este estado.";
+            list.appendChild(empty);
+          } else {
+            matches
+              .sort(compareMatchDateTime)
+              .forEach((match) => list.appendChild(buildScheduleItem(match)));
+          }
+
+          section.appendChild(list);
+          UI.scheduleView.appendChild(section);
+        });
+      };
+
       const buildMatchRow = (match = {}) => {
         const tr = document.createElement("tr");
         tr.className = `match-row ${match.estado || "Programado"}`;
@@ -498,6 +624,7 @@
           quarter: "Cuartos de final",
           semi: "Semifinal",
           final: "Final",
+          third: "3.º y 4.º puesto",
         };
 
         const activeRound = titleMap[round] ? round : "quarter";
@@ -507,11 +634,13 @@
           UI.eliminationRounds.appendChild(buildMatchTable(titleMap.quarter, eliminationData.quarterFinals));
         } else if (activeRound === "semi") {
           UI.eliminationRounds.appendChild(buildMatchTable(titleMap.semi, eliminationData.semiFinals));
-        } else {
-          const [championshipMatch, thirdPlaceMatch] = eliminationData.finals || [];
+        } else if (activeRound === "final") {
+          const championshipMatch = eliminationData.finals[0];
           UI.eliminationRounds.appendChild(
             buildMatchTable("Partido final del campeonato", championshipMatch ? [championshipMatch] : []),
           );
+        } else {
+          const thirdPlaceMatch = eliminationData.thirdPlace[0];
           UI.eliminationRounds.appendChild(
             buildMatchTable("Partido por 3.º y 4.º puesto", thirdPlaceMatch ? [thirdPlaceMatch] : []),
           );
@@ -616,7 +745,8 @@
         eliminationData = {
           quarterFinals: qf,
           semiFinals: [sfLeft, sfRight],
-          finals: [finalMatch, thirdMatch],
+          finals: [finalMatch],
+          thirdPlace: [thirdMatch],
         };
 
         const allMatches = [...qf, sfLeft, sfRight, finalMatch, thirdMatch];
@@ -640,32 +770,34 @@
         );
       };
 
-      const syncStatus = (ok) => {
-        if (!UI.syncState) return;
-        UI.syncState.textContent = ok ? "Sincronizado" : "Sin conexión";
-        UI.syncState.classList.toggle("is-ok", ok);
-        UI.syncState.classList.toggle("is-error", !ok);
-      };
-
       const updateTimestamp = () => {
         if (!UI.syncTime) return;
         UI.syncTime.textContent = `Última actualización: ${new Date().toLocaleTimeString("es-ES")}`;
       };
 
+      const loadJson = async (file) => {
+        const response = await fetch(`${file}?v=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`No se pudo leer el archivo ${file}`);
+        return response.json();
+      };
+
       const loadData = async () => {
         try {
-          const response = await fetch(`${UI.dataFile}?v=${Date.now()}`, { cache: "no-store" });
-          if (!response.ok) throw new Error("No se pudo leer el archivo");
-          const raw = await response.json();
+          const [groupsRaw, eliminationRaw] = await Promise.all([
+            loadJson(UI.groupsDataFile),
+            loadJson(UI.eliminationDataFile),
+          ]);
 
-          renderEventData(raw.evento || raw.event || {});
-          renderGroups(raw.grupos || raw.groups || {});
-          renderElimination(raw.eliminatoria || raw.elimination || {});
+          renderEventData(groupsRaw.evento || groupsRaw.event || {});
+          renderGroups(groupsRaw.grupos || groupsRaw.groups || {});
+          groupMatches = getGroupMatchList(groupsRaw);
+          renderElimination(eliminationRaw.eliminatoria || eliminationRaw.elimination || {});
+          renderProgramacion();
 
           UI.groupsStatus.textContent = "Datos cargados correctamente.";
           updateTimestamp();
         } catch (error) {
-          UI.groupsStatus.textContent = "No se pudo cargar data/maratonsc-data.json";
+          UI.groupsStatus.textContent = "No se pudo cargar los datos del torneo";
           console.error(error);
         }
       };
@@ -714,7 +846,7 @@
       });
 
       const defaultSection = window.location.hash.replace("#", "") || "inicio";
-      activateSection(["inicio", "grupos", "eliminatoria"].includes(defaultSection) ? defaultSection : "inicio");
+      activateSection(["inicio", "grupos", "eliminatoria", "programacion"].includes(defaultSection) ? defaultSection : "inicio");
 
       loadData();
       setInterval(loadData, UI.refreshMs);
