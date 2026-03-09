@@ -73,8 +73,8 @@
     "tercerPuesto": {
       "partido": "F2",
       "fase": "3.º y 4.º puesto",
-      "local": "",
-      "visitante": "",
+      "local": "PS1",
+      "visitante": "PS2",
       "fecha": "2026-07-26",
       "hora": "10:00",
       "golesLocal": null,
