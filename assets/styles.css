@@ -68,33 +68,6 @@ h3 {
   font-size: clamp(1.9rem, 5vw, 2.8rem);
 }
 
-.sync {
-  margin: 0;
-  color: #dbeafe;
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  font-size: 0.92rem;
-}
-
-#sync-state.is-ok::before,
-#sync-state.is-error::before {
-  content: "";
-  display: inline-block;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 99px;
-  margin-right: 0.25rem;
-}
-
-#sync-state.is-ok::before {
-  background: #22c55e;
-}
-
-#sync-state.is-error::before {
-  background: var(--bad);
-}
-
 .menu {
   margin-top: -1.3rem;
   width: min(1080px, 92vw);
@@ -386,6 +359,23 @@ footer {
   color: #334155;
   text-align: center;
   font-size: 0.88rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.instagram-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.instagram-link img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 @media (max-width: 860px) {

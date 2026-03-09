@@ -8,6 +8,7 @@
       name="description"
       content="Página pública del campeonato de fútbol sala Maratón SC."
     />
+    <link rel="icon" href="assets/logo.jpg" type="image/jpeg" />
     <link
       href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Barlow+Condensed:wght@700&display=swap"
       rel="stylesheet"
@@ -18,13 +19,9 @@
     <header class="topbar">
       <div class="brand-header">
         <img class="brand-logo" src="assets/logo.jpg" alt="Logo de Maratón SC" />
-        <p class="brand">Maratón SC</p>
+      <p class="brand">Maratón SC</p>
       </div>
       <h1>Campeonato de Fútbol Sala</h1>
-      <p class="sync">
-        <span id="sync-state">Sincronizado</span>
-        <span id="sync-time">-</span>
-      </p>
     </header>
 
     <nav class="menu" aria-label="Navegación principal">
@@ -82,15 +79,22 @@
     </main>
 
     <footer>
-      Todos los derechos reservados © Maratón SC.
+      <span>Todos los derechos reservados © Maratón SC.</span>
+      <a
+        class="instagram-link"
+        href="https://www.instagram.com/maratonsc2026?igsh=bDFkajJhYThnMWcx"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram de Maratón SC"
+      >
+        <img src="assets/instagram.png" alt="" aria-hidden="true" />
+      </a>
     </footer>
 
     <script>
       const UI = {
         dataFile: "data/maratonsc-data.json",
         refreshMs: 15000,
-        syncState: document.getElementById("sync-state"),
-        syncTime: document.getElementById("sync-time"),
         groupsGrid: document.getElementById("groups-grid"),
         eliminationRounds: document.getElementById("elimination-rounds"),
         groupsStatus: document.getElementById("groups-status"),
@@ -637,12 +641,14 @@
       };
 
       const syncStatus = (ok) => {
+        if (!UI.syncState) return;
         UI.syncState.textContent = ok ? "Sincronizado" : "Sin conexión";
         UI.syncState.classList.toggle("is-ok", ok);
         UI.syncState.classList.toggle("is-error", !ok);
       };
 
       const updateTimestamp = () => {
+        if (!UI.syncTime) return;
         UI.syncTime.textContent = `Última actualización: ${new Date().toLocaleTimeString("es-ES")}`;
       };
 
@@ -656,11 +662,9 @@
           renderGroups(raw.grupos || raw.groups || {});
           renderElimination(raw.eliminatoria || raw.elimination || {});
 
-          syncStatus(true);
           UI.groupsStatus.textContent = "Datos cargados correctamente.";
           updateTimestamp();
         } catch (error) {
-          syncStatus(false);
           UI.groupsStatus.textContent = "No se pudo cargar data/maratonsc-data.json";
           console.error(error);
         }
