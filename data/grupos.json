@@ -8,18 +8,18 @@
       { "nombre": "Equipo A5", "puntos": 1 }
     ],
     "B": [
-      { "nombre": "Equipo B1", "puntos": 0 },
-      { "nombre": "Equipo B2", "puntos": 0 },
-      { "nombre": "Equipo B3", "puntos": 0 },
-      { "nombre": "Equipo B4", "puntos": 0 },
-      { "nombre": "Equipo B5", "puntos": 0 }
+      { "nombre": "Equipo B1", "puntos": 1 },
+      { "nombre": "Equipo B2", "puntos": 2},
+      { "nombre": "Equipo B3", "puntos": 3 },
+      { "nombre": "Equipo B4", "puntos": 5},
+      { "nombre": "Equipo B5", "puntos": 4}
     ],
     "C": [
-      { "nombre": "Equipo C1", "puntos": 0 },
-      { "nombre": "Equipo C2", "puntos": 0 },
-      { "nombre": "Equipo C3", "puntos": 0 },
-      { "nombre": "Equipo C4", "puntos": 0 },
-      { "nombre": "Equipo C5", "puntos": 0 }
+      { "nombre": "Equipo C1", "puntos": 9 },
+      { "nombre": "Equipo C2", "puntos": 8},
+      { "nombre": "Equipo C3", "puntos": 2},
+      { "nombre": "Equipo C4", "puntos": 0},
+      { "nombre": "Equipo C5", "puntos": 7}
     ]
   },
   "partidos": [
