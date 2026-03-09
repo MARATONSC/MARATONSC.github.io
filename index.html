@@ -100,8 +100,10 @@
 
     <script>
       const UI = {
+        dataManifestFile: "data/maratonsc-data.json",
         groupsDataFile: "data/grupos.json",
         eliminationDataFile: "data/eliminatoria.json",
+        eventDataFile: "data/evento.json",
         refreshMs: 15000,
         groupsGrid: document.getElementById("groups-grid"),
         eliminationRounds: document.getElementById("elimination-rounds"),
@@ -783,12 +785,26 @@
 
       const loadData = async () => {
         try {
-          const [groupsRaw, eliminationRaw] = await Promise.all([
-            loadJson(UI.groupsDataFile),
-            loadJson(UI.eliminationDataFile),
+          let manifest = {};
+          try {
+            manifest = await loadJson(UI.dataManifestFile);
+          } catch (error) {
+            manifest = {
+              fuentes: {
+                evento: UI.eventDataFile,
+                grupos: UI.groupsDataFile,
+                eliminatoria: UI.eliminationDataFile,
+              },
+            };
+          }
+
+          const [eventRaw, groupsRaw, eliminationRaw] = await Promise.all([
+            loadJson(pickField(manifest, ["fuentes", "sources"], {}).evento || UI.eventDataFile),
+            loadJson(pickField(manifest, ["fuentes", "sources"], {}).grupos || UI.groupsDataFile),
+            loadJson(pickField(manifest, ["fuentes", "sources"], {}).eliminatoria || UI.eliminationDataFile),
           ]);
 
-          renderEventData(groupsRaw.evento || groupsRaw.event || {});
+          renderEventData(eventRaw.evento || eventRaw.event || eventRaw);
           renderGroups(groupsRaw.grupos || groupsRaw.groups || {});
           groupMatches = getGroupMatchList(groupsRaw);
           renderElimination(eliminationRaw.eliminatoria || eliminationRaw.elimination || {});
