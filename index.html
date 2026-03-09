@@ -38,6 +38,7 @@
         </a>
       </div>
       <h1>Campeonato de Fútbol Sala</h1>
+      <p id="event-date-header" class="event-date-header">25 y 26 de Julio</p>
     </header>
 
     <nav class="menu" aria-label="Navegación principal">
@@ -49,7 +50,27 @@
 
     <main>
       <section id="inicio" class="panel section-page is-visible">
-        <h2>Inicio</h2>
+        <article class="inicio-intro">
+          <h3>Bienvenido al torneo de fútbol sala de la localidad</h3>
+          <p>Vive la energía de la temporada en cada partido: ritmo, emoción y pasión en un calendario pensado para que
+          sigas cada fase del campeonato en tiempo real.</p>
+        </article>
+        <article class="dashboard">
+          <div class="dashboard-grid">
+            <a href="#programacion" class="quick-tile">
+              <h3>Programación</h3>
+              <p>Consulta la programación de todos los enfrentamientos.</p>
+            </a>
+            <a href="#eliminatoria" class="quick-tile">
+              <h3>Fase eliminatoria</h3>
+              <p>Revisa la clasificatoria actual del torneo.</p>
+            </a>
+            <a href="#grupos" class="quick-tile">
+              <h3>Fase de grupos</h3>
+              <p>Consulta la tabla y resultados actualizados de la fase de grupos.</p>
+            </a>
+          </div>
+        </article>
         <article class="next-matches">
           <h3>Próximos partidos</h3>
           <ul id="upcoming-matches" class="next-matches-list">
@@ -59,30 +80,22 @@
         </article>
         <article class="info-grid">
           <div>
-            <h3>Organización</h3>
-            <p id="event-organization">-</p>
-          </div>
-          <div>
             <h3>Lugar</h3>
             <p id="event-location">-</p>
-          </div>
-          <div>
-            <h3>Fecha del evento</h3>
-            <p id="event-date">-</p>
+            <div class="location-map" id="location-map-wrapper">
+              <iframe id="event-map" title="Mapa del lugar" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              <a id="event-map-link" class="map-link" href="#" target="_blank" rel="noopener noreferrer">Abrir en Google Maps</a>
+            </div>
           </div>
         </article>
       </section>
 
       <section id="grupos" class="panel section-page">
-        <h2>Fase de grupos</h2>
         <p class="small" id="groups-status">Cargando clasificación de grupos…</p>
         <div id="groups-grid" class="groups-grid"></div>
       </section>
 
       <section id="eliminatoria" class="panel section-page">
-        <div class="panel-head">
-          <h2>Fase eliminatoria</h2>
-        </div>
         <nav class="elimination-subnav" aria-label="Rondas de la fase eliminatoria">
           <button type="button" class="elimination-tab is-active" data-round="quarter">Cuartos de final</button>
           <button type="button" class="elimination-tab" data-round="third">3º y 4º</button>
@@ -93,13 +106,12 @@
       </section>
 
       <section id="programacion" class="panel section-page">
-        <h2>Programación</h2>
         <div id="schedule-view" class="schedule-view"></div>
       </section>
     </main>
 
-    <footer>
-      <span>Todos los derechos reservados © Maratón SC.</span>
+  <footer>
+      <span>Todos los derechos reservados © <span id="event-organization">-</span>.</span>
     </footer>
 
     <script>
@@ -113,8 +125,11 @@
         eliminationRounds: document.getElementById("elimination-rounds"),
         groupsStatus: document.getElementById("groups-status"),
         eventOrganization: document.getElementById("event-organization"),
+        eventDateHeader: document.getElementById("event-date-header"),
         eventLocation: document.getElementById("event-location"),
-        eventDate: document.getElementById("event-date"),
+        eventMap: document.getElementById("event-map"),
+        eventMapLink: document.getElementById("event-map-link"),
+        eventMapWrap: document.getElementById("location-map-wrapper"),
         upcomingMatches: document.getElementById("upcoming-matches"),
         upcomingMoreBtn: document.getElementById("upcoming-more"),
         scheduleView: document.getElementById("schedule-view"),
@@ -760,19 +775,33 @@
       };
 
       const renderEventData = (eventData = {}) => {
-        UI.eventOrganization.textContent = toText(
-          pickField(eventData, ["organizacion", "organization"], "Maratón SC"),
+        const locationValue = toText(
+          pickField(eventData, ["lugar", "location", "direccion"], "Cam. Cuenca, 4, 16600 San Clemente, Cuenca."),
         );
-        UI.eventLocation.textContent = toText(
-          pickField(
-            eventData,
-            ["lugar", "location", "direccion"],
-            "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
-          ),
+        const mapValue = toText(
+          pickField(eventData, ["map_url", "mapa", "googleMaps", "maps", "mapa_url"], ""),
         );
-        UI.eventDate.textContent = toText(
+        const organizationValue = toText(
+          pickField(eventData, ["organizacion", "organization", "organizer", "name"], "Maratón SC"),
+        );
+        const dateValue = toText(
           pickField(eventData, ["fecha", "date"], "25 y 26 de Julio"),
         );
+
+        UI.eventOrganization.textContent = organizationValue;
+        UI.eventLocation.textContent = locationValue;
+        UI.eventDateHeader.textContent = dateValue;
+        if (locationValue) {
+          const mapQuery = mapValue || locationValue;
+          const encoded = encodeURIComponent(mapQuery);
+          UI.eventMap.src = `https://www.google.com/maps?q=${encoded}&output=embed`;
+          UI.eventMapLink.href = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+          UI.eventMapWrap.classList.remove("is-hidden");
+        } else {
+          UI.eventMapWrap.classList.add("is-hidden");
+          UI.eventMap.removeAttribute("src");
+          UI.eventMapLink.removeAttribute("href");
+        }
       };
 
       const updateTimestamp = () => {
@@ -813,7 +842,6 @@
           renderElimination(eliminationRaw.eliminatoria || eliminationRaw.elimination || {});
           renderProgramacion();
 
-          UI.groupsStatus.textContent = "Datos cargados correctamente.";
           updateTimestamp();
         } catch (error) {
           UI.groupsStatus.textContent = "No se pudo cargar los datos del torneo";
