@@ -33,7 +33,8 @@
         "partido": "1ºA VS 2ºRes",
         "local": "1ºA",
         "visitante": "2ºRes",
-        "hora": "",
+        "fecha": "2026-07-25",
+        "hora": "09:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -42,7 +43,8 @@
         "partido": "Q2",
         "local": "",
         "visitante": "",
-        "hora": "",
+        "fecha": "2026-07-25",
+        "hora": "09:45",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -51,7 +53,8 @@
         "partido": "Q3",
         "local": "",
         "visitante": "",
-        "hora": "",
+        "fecha": "2026-07-25",
+        "hora": "10:30",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -60,7 +63,8 @@
         "partido": "Q4",
         "local": "",
         "visitante": "",
-        "hora": "",
+        "fecha": "2026-07-25",
+        "hora": "11:15",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -71,7 +75,8 @@
         "partido": "S1",
         "local": "",
         "visitante": "",
-        "hora": "",
+        "fecha": "2026-07-25",
+        "hora": "18:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -80,7 +85,8 @@
         "partido": "S2",
         "local": "",
         "visitante": "",
-        "hora": "",
+        "fecha": "2026-07-26",
+        "hora": "18:45",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -90,7 +96,8 @@
       "partido": "F2",
       "local": "",
       "visitante": "",
-      "hora": "",
+      "fecha": "2026-07-26",
+      "hora": "10:00",
       "golesLocal": null,
       "golesVisitante": null,
       "estado": "Programado"
@@ -99,7 +106,8 @@
       "partido": "F1",
       "local": "",
       "visitante": "",
-      "hora": "",
+      "fecha": "2026-07-26",
+      "hora": "10:30",
       "golesLocal": null,
       "golesVisitante": null,
       "estado": "Programado"

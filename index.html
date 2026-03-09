@@ -50,6 +50,13 @@
             <p id="event-date">-</p>
           </div>
         </article>
+        <article class="next-matches">
+          <h3>Próximos partidos</h3>
+          <ul id="upcoming-matches" class="next-matches-list">
+            <li class="muted">Sin partidos programados por el momento.</li>
+          </ul>
+          <button id="upcoming-more" type="button" class="next-toggle is-hidden">Ver más</button>
+        </article>
       </section>
 
       <section id="grupos" class="panel section-page">
@@ -90,6 +97,8 @@
         eventOrganization: document.getElementById("event-organization"),
         eventLocation: document.getElementById("event-location"),
         eventDate: document.getElementById("event-date"),
+        upcomingMatches: document.getElementById("upcoming-matches"),
+        upcomingMoreBtn: document.getElementById("upcoming-more"),
         refreshBtn: document.getElementById("refresh-data"),
         eliminationTabs: document.querySelectorAll(".elimination-tab"),
         sections: document.querySelectorAll(".section-page"),
@@ -183,6 +192,154 @@
       const matchTimeLabel = (match) => {
         if (hasValue(match.hora)) return toText(match.hora);
         return "Sin horario definido";
+      };
+
+      const hasDateAndTime = (match = {}) => {
+        const matchDate = toText(pickField(match, ["fecha", "fechaPartido", "fechaDelPartido", "date"], ""));
+        const matchTime = toText(pickField(match, ["hora", "time", "horario"], ""));
+        return hasValue(matchDate) && hasValue(matchTime);
+      };
+
+      const normalizeDatePart = (value) => {
+        const raw = toText(value);
+        if (!raw) return null;
+
+        const direct = Date.parse(raw);
+        if (!Number.isNaN(direct)) return new Date(direct);
+
+        const ddmmy = raw.match(/^\s*(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?\s*$/);
+        if (!ddmmy) return null;
+
+        const day = Number(ddmmy[1]);
+        const month = Number(ddmmy[2]);
+        const yearRaw = ddmmy[3];
+        const year = yearRaw
+          ? yearRaw.length === 2
+            ? 2000 + Number(yearRaw)
+            : Number(yearRaw)
+          : new Date().getFullYear();
+        if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) return null;
+
+        const parsed = new Date(year, month - 1, day);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+      };
+
+      const normalizeTimePart = (value) => {
+        const raw = toText(value);
+        if (!raw) return null;
+        const match = raw.match(/^\s*(\d{1,2}):(\d{2})(?::(\d{2}))?\s*$/);
+        if (!match) return null;
+
+        const hour = Number(match[1]);
+        const minute = Number(match[2]);
+        const second = Number(match[3] || 0);
+        if (Number.isNaN(hour) || Number.isNaN(minute) || Number.isNaN(second)) return null;
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) return null;
+        return { hour, minute, second };
+      };
+
+      const matchDateTime = (match = {}) => {
+        const rawDate = toText(pickField(match, ["fecha", "fechaPartido", "fechaDelPartido", "date"], ""));
+        const rawTime = toText(pickField(match, ["hora", "time", "horario"], ""));
+
+        const parsedDate = normalizeDatePart(rawDate);
+        if (!parsedDate) return null;
+
+        const parsedTime = normalizeTimePart(rawTime);
+        if (!parsedTime) return parsedDate.getTime();
+
+        const dateTime = new Date(parsedDate);
+        dateTime.setHours(parsedTime.hour, parsedTime.minute, parsedTime.second, 0);
+        return dateTime.getTime();
+      };
+
+      const compareMatchDateTime = (matchA = {}, matchB = {}) => {
+        const dateA = matchDateTime(matchA);
+        const dateB = matchDateTime(matchB);
+
+        if (dateA === null && dateB === null) return 0;
+        if (dateA === null) return 1;
+        if (dateB === null) return -1;
+        return dateA - dateB;
+      };
+
+      const formatDateTimeLabel = (match = {}) => {
+        const rawDate = toText(pickField(match, ["fecha", "fechaPartido", "fechaDelPartido", "date"], ""));
+        const rawTime = toText(pickField(match, ["hora", "time", "horario"], ""));
+        const dateTime = matchDateTime(match);
+
+        if (dateTime === null) {
+          if (hasValue(rawDate) && hasValue(rawTime)) return `${rawDate} · ${rawTime}`;
+          if (hasValue(rawDate)) return rawDate;
+          if (hasValue(rawTime)) return `Hora: ${rawTime}`;
+          return "Sin fecha/hora definida";
+        }
+
+        const parsed = new Date(dateTime);
+        const dateLabel = parsed.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+          ...(hasValue(rawDate) && /\d{4}/.test(rawDate) ? {} : {}),
+        });
+
+        if (!hasValue(rawTime)) {
+          return dateLabel;
+        }
+
+        const timeLabel = parsed.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        return `${dateLabel} · ${timeLabel}`;
+      };
+
+      const renderUpcomingMatches = (matches = []) => {
+        UI.upcomingMatches.replaceChildren();
+
+        const normalized = matches
+          .filter((match) => toText(match.estado) === "Programado")
+          .filter(hasDateAndTime)
+          .sort(compareMatchDateTime);
+
+        if (normalized.length === 0) {
+          const empty = document.createElement("li");
+          empty.className = "muted";
+          empty.textContent = "Sin partidos programados por el momento.";
+          UI.upcomingMoreBtn.classList.add("is-hidden");
+          UI.upcomingMatches.appendChild(empty);
+          UI.upcomingMoreBtn.textContent = "Ver más";
+          return;
+        }
+
+        const shouldShowAll = UI.upcomingMoreBtn.dataset.expanded === "true";
+        const visibleMatches = shouldShowAll ? normalized : normalized.slice(0, 2);
+
+        visibleMatches.forEach((match) => {
+          const row = document.createElement("li");
+          row.className = "upcoming-match";
+
+          const localTeam = hasValue(match.local) ? match.local : "Por definir";
+          const awayTeam = hasValue(match.visitante) ? match.visitante : "Por definir";
+
+          row.innerHTML = `
+            <span class="upcoming-match-teams">${localTeam} vs ${awayTeam}</span>
+            <span class="upcoming-match-meta">
+              <span>${toText(match.ronda) || "Sin ronda"}</span>
+              <span>·</span>
+              <span>${formatDateTimeLabel(match)}</span>
+            </span>
+          `;
+
+          UI.upcomingMatches.appendChild(row);
+        });
+
+        if (normalized.length <= 2) {
+          UI.upcomingMoreBtn.classList.add("is-hidden");
+          return;
+        }
+
+        UI.upcomingMoreBtn.classList.remove("is-hidden");
+        UI.upcomingMoreBtn.textContent = shouldShowAll ? "Ver menos" : "Ver más";
       };
 
       const teamPoints = (value) => {
@@ -391,6 +548,7 @@
             home: `Q${i + 1} Equipo 1`,
             away: `Q${i + 1} Equipo 2`,
           });
+          qf[i].ronda = "Cuartos de final";
         }
 
         const qfWinners = qf.map((match, index) => match.winner || `Ganador Q${index + 1}`);
@@ -403,11 +561,13 @@
           home: qfWinners[0],
           away: qfWinners[1],
         });
+        sfLeft.ronda = "Semifinal";
         const sfRight = normalizeMatch(sf1raw, {
           partido: "S2",
           home: qfWinners[2],
           away: qfWinners[3],
         });
+        sfRight.ronda = "Semifinal";
 
         sfLeft.local = hasValue(sf0raw.local || sf0raw.teamHome) ? sfLeft.local : qfWinners[0];
         sfLeft.visitante = hasValue(sf0raw.visitante || sf0raw.teamAway)
@@ -428,6 +588,7 @@
           home: sfLeftWinner,
           away: sfRightWinner,
         });
+        finalMatch.ronda = "Final";
         finalMatch.local = hasValue(finalRaw.local || finalRaw.teamHome)
           ? finalMatch.local
           : sfLeftWinner;
@@ -440,6 +601,7 @@
           home: sfLeftLoser,
           away: sfRightLoser,
         });
+        thirdMatch.ronda = "3.º y 4.º puesto";
         thirdMatch.local = hasValue(thirdRaw.local || thirdRaw.teamHome)
           ? thirdMatch.local
           : sfLeftLoser;
@@ -453,6 +615,8 @@
           finals: [finalMatch, thirdMatch],
         };
 
+        const allMatches = [...qf, sfLeft, sfRight, finalMatch, thirdMatch];
+        renderUpcomingMatches(allMatches);
         renderEliminationRound(activeEliminationRound);
       };
 
@@ -534,6 +698,16 @@
       });
 
       UI.refreshBtn.addEventListener("click", loadData);
+      UI.upcomingMoreBtn.addEventListener("click", () => {
+        const expanded = UI.upcomingMoreBtn.dataset.expanded === "true";
+        UI.upcomingMoreBtn.dataset.expanded = expanded ? "false" : "true";
+
+        renderUpcomingMatches([
+          ...(eliminationData.quarterFinals || []),
+          ...(eliminationData.semiFinals || []),
+          ...(eliminationData.finals || []),
+        ]);
+      });
 
       const defaultSection = window.location.hash.replace("#", "") || "inicio";
       activateSection(["inicio", "grupos", "eliminatoria"].includes(defaultSection) ? defaultSection : "inicio");
