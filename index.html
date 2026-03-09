@@ -18,8 +18,24 @@
   <body>
     <header class="topbar">
       <div class="brand-header">
-        <img class="brand-logo" src="assets/logo.jpg" alt="Logo de Maratón SC" />
-      <p class="brand">Maratón SC</p>
+        <a
+          id="brand-home-link"
+          class="brand-home"
+          href="#inicio"
+          aria-label="Ir a la pestaña Inicio"
+        >
+          <img class="brand-logo" src="assets/logo.jpg" alt="Logo de Maratón SC" />
+          <p class="brand">Maratón SC</p>
+        </a>
+        <a
+          class="instagram-link instagram-link--topbar"
+          href="https://www.instagram.com/maratonsc2026?igsh=bDFkajJhYThnMWcx"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram de Maratón SC"
+        >
+          <img src="assets/instagram.png" alt="" aria-hidden="true" />
+        </a>
       </div>
       <h1>Campeonato de Fútbol Sala</h1>
     </header>
@@ -84,15 +100,6 @@
 
     <footer>
       <span>Todos los derechos reservados © Maratón SC.</span>
-      <a
-        class="instagram-link"
-        href="https://www.instagram.com/maratonsc2026?igsh=bDFkajJhYThnMWcx"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Instagram de Maratón SC"
-      >
-        <img src="assets/instagram.png" alt="" aria-hidden="true" />
-      </a>
     </footer>
 
     <script>
@@ -861,6 +868,18 @@
 
       loadData();
       setInterval(loadData, UI.refreshMs);
+    </script>
+    <script>
+      document.getElementById("brand-home-link")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        document
+          .querySelector('.menu-link[data-section="inicio"]')
+          ?.click();
+        window.scrollTo({
+          top: 0,
+          behavior: "auto",
+        });
+      });
     </script>
   </body>
 </html>

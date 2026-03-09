@@ -45,6 +45,44 @@ h3 {
   margin-bottom: 0.4rem;
 }
 
+.brand-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-home:focus-visible {
+  outline: 2px solid rgba(248, 250, 252, 0.9);
+  outline-offset: 2px;
+}
+
+.brand-home .brand {
+  margin: 0;
+}
+
+.instagram-link--topbar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.instagram-link--topbar:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.instagram-link--topbar img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+}
+
 .brand-logo {
   width: 74px;
   height: 74px;
