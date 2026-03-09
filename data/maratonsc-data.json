@@ -31,8 +31,8 @@
     "cuartosDeFinal": [
       {
         "partido": "1ºA VS 2ºRes",
-        "local": "",
-        "visitante": "",
+        "local": "1ºA",
+        "visitante": "2ºRes",
         "hora": "",
         "golesLocal": null,
         "golesVisitante": null,
