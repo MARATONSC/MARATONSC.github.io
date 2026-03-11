@@ -51,25 +51,8 @@
     <main>
       <section id="inicio" class="panel section-page is-visible">
         <article class="inicio-intro">
-          <h3>Bienvenido al torneo de fútbol sala de la localidad</h3>
-          <p>Vive la energía de la temporada en cada partido: ritmo, emoción y pasión en un calendario pensado para que
-          sigas cada fase del campeonato en tiempo real.</p>
-        </article>
-        <article class="dashboard">
-          <div class="dashboard-grid">
-            <a href="#programacion" class="quick-tile">
-              <h3>Programación</h3>
-              <p>Consulta la programación de todos los enfrentamientos.</p>
-            </a>
-            <a href="#eliminatoria" class="quick-tile">
-              <h3>Fase eliminatoria</h3>
-              <p>Revisa la clasificatoria actual del torneo.</p>
-            </a>
-            <a href="#grupos" class="quick-tile">
-              <h3>Fase de grupos</h3>
-              <p>Consulta la tabla y resultados actualizados de la fase de grupos.</p>
-            </a>
-          </div>
+          <h3>Bienvenido a la Maratón de fútbol sala</h3>
+          <p>Te informamos de todo lo relacionado con el campeonato: programación, grupos y eliminatorias.</p>
         </article>
         <article class="next-matches">
           <h3>Próximos partidos</h3>
@@ -869,16 +852,6 @@
         link.addEventListener("click", (event) => {
           event.preventDefault();
           const section = link.dataset.section;
-          activateSection(section);
-          history.replaceState(null, "", `#${section}`);
-        });
-      });
-
-      document.querySelectorAll(".quick-tile").forEach((link) => {
-        link.addEventListener("click", (event) => {
-          event.preventDefault();
-          const section = new URL(link.getAttribute("href"), window.location.href).hash.replace("#", "");
-          if (!section) return;
           activateSection(section);
           history.replaceState(null, "", `#${section}`);
         });
