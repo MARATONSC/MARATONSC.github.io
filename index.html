@@ -46,6 +46,7 @@
       <a href="#grupos" class="menu-link" data-section="grupos">Fase de grupos</a>
       <a href="#eliminatoria" class="menu-link" data-section="eliminatoria">Fase eliminatoria</a>
       <a href="#programacion" class="menu-link" data-section="programacion">Programación</a>
+      <a href="#patrocinadores" class="menu-link" data-section="patrocinadores">Patrocinadores</a>
     </nav>
 
     <main>
@@ -104,6 +105,12 @@
         </div>
         <div id="schedule-view" class="schedule-view"></div>
       </section>
+
+      <section id="patrocinadores" class="panel section-page">
+        <h2>Patrocinadores</h2>
+        <p class="small">Información de las empresas que apoyan la Maratón SC.</p>
+        <div id="sponsors-grid" class="sponsors-grid"></div>
+      </section>
     </main>
 
   <footer>
@@ -133,6 +140,7 @@
         eliminationTabs: document.querySelectorAll(".elimination-tab"),
         sections: document.querySelectorAll(".section-page"),
         menuLinks: document.querySelectorAll(".menu-link"),
+        sponsorsGrid: document.getElementById("sponsors-grid"),
       };
 
       let activeEliminationRound = "quarter";
@@ -840,6 +848,70 @@
         }
       };
 
+      const renderSponsors = (sponsors = []) => {
+        UI.sponsorsGrid.replaceChildren();
+
+        if (!Array.isArray(sponsors) || sponsors.length === 0) {
+          const empty = document.createElement("article");
+          empty.className = "sponsors-empty";
+          empty.textContent = "No hay patrocinadores registrados todavía.";
+          UI.sponsorsGrid.appendChild(empty);
+          return;
+        }
+
+        sponsors.forEach((sponsor = {}) => {
+          const name = toText(pickField(sponsor, ["nombre", "name", "empresa", "sponsor", "title"], ""));
+          const url = toText(pickField(sponsor, ["link", "url", "website", "websiteUrl"], ""));
+          const logo = toText(
+            pickField(sponsor, ["logo", "logoUrl", "imagen", "image", "imageUrl"], "assets/logo.jpg"),
+          );
+
+          if (!name) return;
+
+          const card = document.createElement("article");
+          card.className = "sponsor-card";
+
+          const anchor = document.createElement("a");
+          anchor.className = "sponsor-link";
+          anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer";
+          if (url) {
+            anchor.href = url;
+          } else {
+            anchor.classList.add("is-disabled");
+            anchor.removeAttribute("target");
+            anchor.removeAttribute("rel");
+          }
+
+          anchor.innerHTML = `
+            <span class="sponsor-logo-wrap">
+              <img class="sponsor-logo" src="${logo}" alt="${name}" loading="lazy" />
+            </span>
+            <span class="sponsor-name">${name}</span>
+            ${toText(pickField(sponsor, ["descripcion", "description"], "")).length > 0 ? `<p class="sponsor-description">${toText(pickField(sponsor, ["descripcion", "description"], ""))}</p>` : ""}
+          `;
+
+          anchor.querySelector(".sponsor-logo").addEventListener("error", () => {
+            const fallback = document.createElement("span");
+            fallback.className = "sponsor-fallback";
+            fallback.textContent = name.charAt(0).toUpperCase() || "?";
+            const wrapper = anchor.querySelector(".sponsor-logo-wrap");
+            wrapper.textContent = "";
+            wrapper.appendChild(fallback);
+          });
+
+          card.appendChild(anchor);
+          UI.sponsorsGrid.appendChild(card);
+        });
+
+        if (UI.sponsorsGrid.children.length === 0) {
+          const empty = document.createElement("article");
+          empty.className = "sponsors-empty";
+          empty.textContent = "No hay patrocinadores con nombre definido.";
+          UI.sponsorsGrid.appendChild(empty);
+        }
+      };
+
       const updateTimestamp = () => {
         if (!UI.syncTime) return;
         UI.syncTime.textContent = `Última actualización: ${new Date().toLocaleTimeString("es-ES")}`;
@@ -871,8 +943,9 @@
             loadJson(pickField(manifest, ["fuentes", "sources"], {}).grupos || UI.groupsDataFile),
             loadJson(pickField(manifest, ["fuentes", "sources"], {}).eliminatoria || UI.eliminationDataFile),
           ]);
-
-          renderEventData(eventRaw.evento || eventRaw.event || eventRaw);
+          const eventData = eventRaw.evento || eventRaw.event || eventRaw;
+          renderEventData(eventData);
+          renderSponsors(eventData.patrocinadores || eventData.sponsors || []);
           renderGroups(groupsRaw.grupos || groupsRaw.groups || {});
           groupMatches = getGroupMatchList(groupsRaw);
           renderElimination(eliminationRaw.eliminatoria || eliminationRaw.elimination || {});
@@ -932,7 +1005,11 @@
       });
 
       const defaultSection = window.location.hash.replace("#", "") || "inicio";
-      activateSection(["inicio", "grupos", "eliminatoria", "programacion"].includes(defaultSection) ? defaultSection : "inicio");
+      activateSection(
+        ["inicio", "grupos", "eliminatoria", "programacion", "patrocinadores"].includes(defaultSection)
+          ? defaultSection
+          : "inicio",
+      );
 
       loadData();
       setInterval(loadData, UI.refreshMs);

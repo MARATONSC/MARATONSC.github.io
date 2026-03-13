@@ -122,7 +122,7 @@ h3 {
   width: min(1080px, 92vw);
   margin-inline: auto;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   background: #0f172a;
   border-radius: 16px;
   overflow: hidden;
@@ -480,6 +480,92 @@ button:hover {
 .schedule-list {
   display: grid;
   gap: 0.55rem;
+}
+
+.sponsors-grid {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
+
+.sponsors-empty {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+  background: #f8fafc;
+}
+
+.sponsor-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.sponsor-link {
+  color: inherit;
+  text-decoration: none;
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.sponsor-link:hover {
+  background: #f8fafc;
+}
+
+.sponsor-logo-wrap {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8fafc;
+  display: grid;
+  place-items: center;
+  padding: 0.75rem;
+  min-height: 140px;
+}
+
+.sponsor-logo {
+  width: 100%;
+  max-width: 180px;
+  height: 110px;
+  object-fit: contain;
+}
+
+.sponsor-fallback {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 1px dashed var(--line);
+  display: grid;
+  place-items: center;
+  color: #334155;
+  font-weight: 800;
+  font-size: 2rem;
+  background: #e0f2fe;
+}
+
+.sponsor-name {
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.sponsor-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.sponsor-link.is-disabled {
+  cursor: default;
+}
+
+.sponsor-link.is-disabled,
+.sponsor-link.is-disabled:hover {
+  color: inherit;
 }
 
 .schedule-item {
