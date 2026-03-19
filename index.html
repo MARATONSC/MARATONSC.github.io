@@ -165,6 +165,32 @@
         return text.length > 0 && text !== "TBD";
       };
 
+      const normalizeSponsorUrl = (value) => {
+        const raw = toText(value);
+        if (!raw) return "";
+        if (/^(https?:\/\/|mailto:|tel:)/i.test(raw)) return raw;
+        return `https://${raw}`;
+      };
+
+      const sponsorImageCandidates = (value) => {
+        const imageName = toText(value);
+        if (!imageName) return "";
+        if (/^(https?:\/\/|\/|data:)/i.test(imageName)) return [imageName];
+        const fileName = imageName.replace(/^assets\/sponsors\//i, "").replace(/^\/+/, "");
+        const hasExtension = /\.[a-z0-9]+$/i.test(fileName);
+        if (hasExtension) return [`assets/sponsors/${fileName}`];
+        const extensions = ["png", "jpg", "jpeg", "webp", "svg"];
+        return extensions.map((ext) => `assets/sponsors/${fileName}.${ext}`);
+      };
+
+      const sponsorNameFromImage = (imageName) => {
+        const safe = toText(imageName);
+        if (!safe) return "Patrocinador";
+        const fileName = safe.split("/").pop();
+        const withoutExt = fileName.includes(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
+        return toText(withoutExt).replace(/[-_]+/g, " ");
+      };
+
       const normalizeSearch = (value = "") => {
         return toText(value)
           .toLowerCase()
@@ -861,12 +887,17 @@
 
         sponsors.forEach((sponsor = {}) => {
           const name = toText(pickField(sponsor, ["nombre", "name", "empresa", "sponsor", "title"], ""));
-          const url = toText(pickField(sponsor, ["link", "url", "website", "websiteUrl"], ""));
-          const logo = toText(
-            pickField(sponsor, ["logo", "logoUrl", "imagen", "image", "imageUrl"], "assets/logo.jpg"),
-          );
+          const link = normalizeSponsorUrl(pickField(sponsor, ["enlace", "link", "url", "website", "websiteUrl", "href"], ""));
+          const imageName = pickField(sponsor, ["imagen", "logo", "logoUrl", "image", "imageUrl"], "");
+          const imageCandidates = sponsorImageCandidates(imageName);
+          const imageUrl = imageCandidates[0] || "";
+          const displayName = name || sponsorNameFromImage(imageName);
+          const logoMissing = !Array.isArray(imageCandidates) || imageCandidates.length === 0;
+          const logoMarkup = logoMissing
+            ? `<span class="sponsor-fallback">${displayName.charAt(0).toUpperCase() || "?"}</span>`
+            : `<img class="sponsor-logo" alt="${displayName}" loading="lazy" />`;
 
-          if (!name) return;
+          if (!hasValue(imageName)) return;
 
           const card = document.createElement("article");
           card.className = "sponsor-card";
@@ -875,8 +906,9 @@
           anchor.className = "sponsor-link";
           anchor.target = "_blank";
           anchor.rel = "noopener noreferrer";
-          if (url) {
-            anchor.href = url;
+          anchor.title = `Abrir ${displayName}`;
+          if (link) {
+            anchor.href = link;
           } else {
             anchor.classList.add("is-disabled");
             anchor.removeAttribute("target");
@@ -885,20 +917,33 @@
 
           anchor.innerHTML = `
             <span class="sponsor-logo-wrap">
-              <img class="sponsor-logo" src="${logo}" alt="${name}" loading="lazy" />
+              ${logoMarkup}
             </span>
-            <span class="sponsor-name">${name}</span>
-            ${toText(pickField(sponsor, ["descripcion", "description"], "")).length > 0 ? `<p class="sponsor-description">${toText(pickField(sponsor, ["descripcion", "description"], ""))}</p>` : ""}
+            <span class="sponsor-name">${displayName}</span>
           `;
 
-          anchor.querySelector(".sponsor-logo").addEventListener("error", () => {
-            const fallback = document.createElement("span");
-            fallback.className = "sponsor-fallback";
-            fallback.textContent = name.charAt(0).toUpperCase() || "?";
-            const wrapper = anchor.querySelector(".sponsor-logo-wrap");
-            wrapper.textContent = "";
-            wrapper.appendChild(fallback);
-          });
+          if (!logoMissing) {
+            const sponsorLogo = anchor.querySelector(".sponsor-logo");
+            const candidates = imageCandidates;
+            const fallbackText = displayName.charAt(0).toUpperCase() || "?";
+            const resolveImage = (index = 0) => {
+              if (index >= candidates.length) {
+                const fallback = document.createElement("span");
+                fallback.className = "sponsor-fallback";
+                fallback.textContent = fallbackText;
+                const wrapper = anchor.querySelector(".sponsor-logo-wrap");
+                wrapper.textContent = "";
+                wrapper.appendChild(fallback);
+                return;
+              }
+              sponsorLogo.src = candidates[index];
+              sponsorLogo.onerror = () => resolveImage(index + 1);
+            };
+            sponsorLogo.onload = () => {
+              sponsorLogo.onerror = null;
+            };
+            resolveImage(0);
+          }
 
           card.appendChild(anchor);
           UI.sponsorsGrid.appendChild(card);
@@ -907,7 +952,7 @@
         if (UI.sponsorsGrid.children.length === 0) {
           const empty = document.createElement("article");
           empty.className = "sponsors-empty";
-          empty.textContent = "No hay patrocinadores con nombre definido.";
+          empty.textContent = "No hay patrocinadores con imagen definida.";
           UI.sponsorsGrid.appendChild(empty);
         }
       };

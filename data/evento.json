@@ -2,5 +2,218 @@
   "organizacion": "Maratón SC",
   "lugar": "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
   "fecha": "1 y 2 de Agosto.",
-  "patrocinadores": []
+  "patrocinadores": [
+    {
+      "imagen": "laaldea",
+      "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html?aid=311090&label=casa-rural-la-aldea-san-clemente-P4BJRAQeLl3WFHZ53nj0jwS704510903030%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atiaud-2382347442888%3Akwd-413090581647%3Alp1005455%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YcGt_tphEo8pawEozW2KQ80&sid=a8c8d9dfb6dda72cae581d9d66f2b170&dest_id=-400581&dest_type=city&dist=0&group_adults=3&group_children=0&hapos=1&hpos=1&no_rooms=2&req_adults=3&req_children=0&room1=A&room2=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1773922790&srpvid=8f2756b0fec90499&type=total&ucfs=1&"
+    },
+    {
+      "imagen": "laaldea",
+      "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html?aid=311090&label=casa-rural-la-aldea-san-clemente-P4BJRAQeLl3WFHZ53nj0jwS704510903030%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atiaud-2382347442888%3Akwd-413090581647%3Alp1005455%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YcGt_tphEo8pawEozW2KQ80&sid=a8c8d9dfb6dda72cae581d9d66f2b170&dest_id=-400581&dest_type=city&dist=0&group_adults=3&group_children=0&hapos=1&hpos=1&no_rooms=2&req_adults=3&req_children=0&room1=A&room2=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1773922790&srpvid=8f2756b0fec90499&type=total&ucfs=1&"
+    },
+    {
+      "imagen": "laaldea",
+      "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html?aid=311090&label=casa-rural-la-aldea-san-clemente-P4BJRAQeLl3WFHZ53nj0jwS704510903030%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atiaud-2382347442888%3Akwd-413090581647%3Alp1005455%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YcGt_tphEo8pawEozW2KQ80&sid=a8c8d9dfb6dda72cae581d9d66f2b170&dest_id=-400581&dest_type=city&dist=0&group_adults=3&group_children=0&hapos=1&hpos=1&no_rooms=2&req_adults=3&req_children=0&room1=A&room2=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1773922790&srpvid=8f2756b0fec90499&type=total&ucfs=1&"
+    },
+    {
+      "imagen": "laaldea",
+      "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html?aid=311090&label=casa-rural-la-aldea-san-clemente-P4BJRAQeLl3WFHZ53nj0jwS704510903030%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atiaud-2382347442888%3Akwd-413090581647%3Alp1005455%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YcGt_tphEo8pawEozW2KQ80&sid=a8c8d9dfb6dda72cae581d9d66f2b170&dest_id=-400581&dest_type=city&dist=0&group_adults=3&group_children=0&hapos=1&hpos=1&no_rooms=2&req_adults=3&req_children=0&room1=A&room2=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1773922790&srpvid=8f2756b0fec90499&type=total&ucfs=1&"
+    },
+    {
+      "imagen": "laaldea",
+      "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html?aid=311090&label=casa-rural-la-aldea-san-clemente-P4BJRAQeLl3WFHZ53nj0jwS704510903030%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atiaud-2382347442888%3Akwd-413090581647%3Alp1005455%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YcGt_tphEo8pawEozW2KQ80&sid=a8c8d9dfb6dda72cae581d9d66f2b170&dest_id=-400581&dest_type=city&dist=0&group_adults=3&group_children=0&hapos=1&hpos=1&no_rooms=2&req_adults=3&req_children=0&room1=A&room2=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1773922790&srpvid=8f2756b0fec90499&type=total&ucfs=1&"
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    },
+    {
+      "imagen": "",
+      "enlace": ""
+    }
+  ]
 }
