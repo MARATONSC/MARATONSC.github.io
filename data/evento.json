@@ -4,12 +4,12 @@
   "fecha": "1 y 2 de Agosto.",
   "patrocinadores": [
     {
-      "imagen": "Casa Rural La Aldea",
+      "imagen": "laaldea",
       "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html"
     },
     {
-      "imagen": "DVID.BARBERSHOP",
-      "enlace": "https://https://https://www.instagram.com/dvid.barbershop?igsh=ZGZjZWZyOTkwcXcz"
+      "imagen": "david_barbershop",
+      "enlace": "https://www.instagram.com/dvid.barbershop"
     },
     {
       "imagen": "",
@@ -17,7 +17,7 @@
     },
     {
       "imagen": "IMG_0856",
-      "enlace": "https://www.instagram.com/cafe_bar_roma?igsh=dTVwdGd0dmV6czMw"
+      "enlace": "https://www.instagram.com/cafe_bar_roma"
     },
     {
       "imagen": "laaldea",
