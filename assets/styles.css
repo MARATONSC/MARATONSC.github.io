@@ -519,12 +519,9 @@ button:hover {
 }
 
 .sponsor-logo-wrap {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #f8fafc;
   display: grid;
   place-items: center;
-  padding: 0.75rem;
+  padding: 0;
   min-height: 140px;
 }
 
@@ -533,13 +530,17 @@ button:hover {
   max-width: 180px;
   height: 110px;
   object-fit: contain;
+  transition: transform 160ms ease;
+}
+
+.sponsor-link:hover .sponsor-logo {
+  transform: translateY(-3px);
 }
 
 .sponsor-fallback {
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  border: 1px dashed var(--line);
   display: grid;
   place-items: center;
   color: #334155;
@@ -782,6 +783,43 @@ footer {
 }
 
 @media (max-width: 620px) {
+  .topbar {
+    padding: 1.5rem 1rem 2.2rem;
+  }
+
+  .brand-header {
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .brand-home {
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .brand-logo {
+    width: 86px;
+    height: 86px;
+  }
+
+  .topbar .brand {
+    max-width: 100%;
+    letter-spacing: 0.18em;
+    line-height: 1.35;
+    font-size: 0.9rem;
+  }
+
+  .instagram-link--topbar img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .topbar h1 {
+    font-size: 1.72rem;
+    line-height: 1.05;
+  }
+
   .sponsors-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
