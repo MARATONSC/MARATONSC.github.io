@@ -1,66 +1,70 @@
 {
   "organizacion": "Maratón SC",
   "lugar": "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
-  "fecha": "1 y 2 de Agosto.",
+  "fecha": "1 y 2 de Agosto",
   "patrocinadores": [
     {
       "imagen": "laaldea",
       "enlace": "https://www.booking.com/hotel/es/casa-rural-la-aldea-san-clemente.es.html"
     },
     {
+      "imagen": "floristeria_jimenez",
+      "enlace": "https://maps.app.goo.gl/ki3d3Hp9kTryfxKx7"
+    },
+    {
+      "imagen": "cuelliga_electricidad",
+      "enlace": ""
+    },
+    {
+      "imagen": "talleres_esteso",
+      "enlace": ""
+    },
+    {
+      "imagen": "cronos",
+      "enlace": ""
+    },
+    {
+      "imagen": "risueno_abogados",
+      "enlace": ""
+    },
+    {
+      "imagen": "lacolada",
+      "enlace": ""
+    },
+    {
       "imagen": "david_barbershop",
       "enlace": "https://www.instagram.com/dvid.barbershop"
     },
     {
-      "imagen": "IMG_0856",
+      "imagen": "bar_roma",
       "enlace": "https://www.instagram.com/cafe_bar_roma"
     },
     {
-      "imagen": "IMG_0893",
+      "imagen": "pub_equi",
       "enlace": "https://www.instagram.com/pub_equilibrio_sc/"
     },
     {
-      "imagen": "",
+      "imagen": "rocio_tattoo",
       "enlace": ""
     },
     {
-      "imagen": "",
+      "imagen": "pintura_alberto",
       "enlace": ""
     },
     {
-      "imagen": "",
+      "imagen": "pisoton",
       "enlace": ""
     },
     {
-      "imagen": "",
+      "imagen": "pub_toiber",
       "enlace": ""
     },
     {
-      "imagen": "",
+      "imagen": "saborearte",
       "enlace": ""
     },
     {
-      "imagen": "",
-      "enlace": ""
-    },
-    {
-      "imagen": "",
-      "enlace": ""
-    },
-    {
-      "imagen": "",
-      "enlace": ""
-    },
-    {
-      "imagen": "",
-      "enlace": ""
-    },
-    {
-      "imagen": "",
-      "enlace": ""
-    },
-    {
-      "imagen": "",
+      "imagen": "autos_fernandez",
       "enlace": ""
     },
     {
