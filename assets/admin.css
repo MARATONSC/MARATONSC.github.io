@@ -1,0 +1,599 @@
+.admin-body {
+  background: #eef6f4;
+}
+
+.pin-gate {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.pin-card {
+  width: min(380px, 100%);
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+}
+
+.pin-card img {
+  width: 76px;
+  height: 76px;
+  justify-self: center;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.pin-card h1 {
+  color: #0f172a;
+  text-align: center;
+  font-size: 1.65rem;
+}
+
+.pin-message {
+  min-height: 1.4rem;
+  margin: 0;
+  color: #991b1b;
+  text-align: center;
+  font-weight: 800;
+}
+
+.admin-body.is-locked .admin-header,
+.admin-body.is-locked .admin-shell {
+  display: none;
+}
+
+.admin-body:not(.is-locked) .pin-gate {
+  display: none;
+}
+
+.admin-header {
+  width: min(1180px, 94vw);
+  margin: 1rem auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.admin-brand img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.admin-header-actions,
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.admin-link,
+.secondary-button {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 0.45rem 0.75rem;
+  background: #ffffff;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-shell {
+  width: min(1180px, 94vw);
+}
+
+.admin-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-summary > div {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem;
+  background: #ffffff;
+}
+
+.admin-kpi-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.admin-summary strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.55rem;
+  color: #0f172a;
+}
+
+.admin-actions,
+.admin-message,
+.admin-tabs,
+.admin-content,
+.github-publish {
+  margin-top: 0.9rem;
+}
+
+.admin-actions,
+.github-publish {
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.github-publish .admin-section-head {
+  margin-bottom: 0.7rem;
+}
+
+.github-publish h2 {
+  font-size: 1.35rem;
+}
+
+.github-token-field,
+.github-remember {
+  margin-bottom: 0.75rem;
+}
+
+.admin-message {
+  min-height: 2.4rem;
+  margin-bottom: 0;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  background: #f0f9ff;
+  color: #075985;
+  font-weight: 800;
+}
+
+.admin-message.is-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.admin-tab {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.admin-tab.is-active,
+.admin-tab:hover {
+  border-color: transparent;
+  color: #ffffff;
+  background: linear-gradient(120deg, #0ea5e9, #0284c7);
+}
+
+.admin-content {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.admin-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.admin-section-head h2 {
+  color: #0f172a;
+  font-size: 1.55rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-field {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.admin-field span,
+.admin-check span {
+  color: #334155;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.admin-field input,
+.admin-field select,
+.admin-field textarea,
+.admin-table input,
+.admin-table select,
+.match-field input,
+.match-field select,
+.match-editor-card input,
+.match-editor-card select,
+.global-duration-field input {
+  width: 100%;
+  border: 1px solid #94a3b8;
+  border-radius: 9px;
+  padding: 0.62rem 0.7rem;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 750;
+  min-height: 44px;
+}
+
+.admin-table select,
+.admin-field select {
+  appearance: auto;
+}
+
+.admin-field input:focus,
+.admin-field select:focus,
+.admin-field textarea:focus,
+.admin-table input:focus,
+.admin-table select:focus,
+.match-field input:focus,
+.match-field select:focus,
+.match-editor-card input:focus,
+.match-editor-card select:focus,
+.global-duration-field input:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
+  outline: none;
+}
+
+.admin-field textarea {
+  min-height: 300px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.45;
+}
+
+.admin-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.admin-check input {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: #f8fafc;
+}
+
+.admin-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.admin-card-head h3 {
+  color: #0f172a;
+  font-size: 1.25rem;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  min-width: 520px;
+}
+
+.admin-table th,
+.admin-table td {
+  vertical-align: middle;
+  padding: 0.65rem 0.45rem;
+}
+
+.admin-table td {
+  text-align: left;
+  font-weight: 400;
+}
+
+.score-input {
+  width: 58px;
+  min-width: 58px;
+  text-align: center;
+  padding-inline: 0.25rem;
+}
+
+.time-input {
+  min-width: 94px;
+}
+
+.date-input {
+  min-width: 150px;
+}
+
+.team-select {
+  min-width: 0;
+}
+
+.match-editor-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.match-editor-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem;
+  background: #ffffff;
+}
+
+.match-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.match-phase-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-weight: 900;
+}
+
+.match-date-time {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.match-date-time label {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.match-date-time span,
+.global-duration-field span,
+.match-state-row > span:first-child {
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.match-scoreboard {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.match-team-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto;
+  gap: 0.7rem;
+  align-items: end;
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.match-state-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.global-duration-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.global-duration-field input {
+  width: 82px;
+}
+
+.match-group-filter {
+  width: min(320px, 100%);
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.8rem;
+}
+
+.match-group-filter span {
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.match-group-filter select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #94a3b8;
+  border-radius: 9px;
+  padding: 0.62rem 0.7rem;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+}
+
+.score-stepper {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: end;
+}
+
+.score-stepper + .score-stepper {
+  margin-top: 0;
+}
+
+.score-stepper > span {
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.score-stepper > div {
+  display: grid;
+  grid-template-columns: 48px 58px 48px;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.score-button {
+  min-width: 48px;
+  min-height: 46px;
+  padding: 0;
+  border-radius: 10px;
+  font-size: 1.35rem;
+  line-height: 1;
+  background: #0f172a;
+}
+
+.status-next-button {
+  min-height: 44px;
+  min-width: 132px;
+  border-radius: 10px;
+  background: #0f172a;
+}
+
+.status-next-button.Disputando {
+  background: #ca8a04;
+}
+
+.status-next-button.Finalizado {
+  background: #16a34a;
+}
+
+.status-pill {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  min-width: 112px;
+  margin-top: 0.35rem;
+  padding: 0.24rem 0.45rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.status-pill.Disputando {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-pill.Finalizado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.Programado {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.danger-button {
+  background: #ef4444;
+}
+
+.json-actions {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .admin-header,
+  .admin-section-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-header-actions,
+  .admin-actions {
+    align-items: stretch;
+  }
+
+  .admin-header-actions > *,
+  .admin-actions > * {
+    text-align: center;
+  }
+
+  .admin-summary,
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .match-team-row {
+    grid-template-columns: 1fr;
+  }
+
+  .score-stepper {
+    justify-items: start;
+  }
+}

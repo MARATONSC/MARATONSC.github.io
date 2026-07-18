@@ -2,6 +2,7 @@
   "organizacion": "Maratón SC",
   "lugar": "Cam. Cuenca, 4, 16600 San Clemente, Cuenca.",
   "fecha": "1 y 2 de Agosto",
+  "duracionPartidosMinutos": 25,
   "patrocinadores": [
     {
       "imagen": "laaldea",

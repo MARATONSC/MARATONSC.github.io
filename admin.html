@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Campeonato Maratón SC</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="assets/logo.jpg" type="image/jpeg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Barlow+Condensed:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <link rel="stylesheet" href="assets/admin.css" />
+  </head>
+  <body class="admin-body is-locked">
+    <section id="pin-gate" class="pin-gate" aria-label="Acceso administrador">
+      <form id="pin-form" class="pin-card">
+        <img src="assets/logo.jpg" alt="Logo de Maratón SC" />
+        <h1>Panel de administración</h1>
+        <label class="admin-field">
+          <span>PIN de acceso</span>
+          <input id="admin-pin" type="password" inputmode="numeric" autocomplete="current-password" autofocus />
+        </label>
+        <button type="submit">Entrar</button>
+        <p id="pin-message" class="pin-message" role="status"></p>
+      </form>
+    </section>
+
+    <header class="admin-header">
+      <a class="admin-brand" href="index.html">
+        <img src="assets/logo.jpg" alt="Logo de Maratón SC" />
+        <span>Maratón SC</span>
+      </a>
+      <div class="admin-header-actions">
+        <a class="admin-link" href="index.html" target="_blank" rel="noopener noreferrer">Ver web</a>
+        <button id="logout-admin" type="button" class="secondary-button">Salir</button>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <section class="admin-summary" aria-label="Resumen">
+        <div>
+          <span class="admin-kpi-label">Equipos</span>
+          <strong id="summary-teams">0</strong>
+        </div>
+        <div>
+          <span class="admin-kpi-label">Partidos</span>
+          <strong id="summary-matches">0</strong>
+        </div>
+        <div>
+          <span class="admin-kpi-label">Disputando</span>
+          <strong id="summary-live">0</strong>
+        </div>
+        <div>
+          <span class="admin-kpi-label">Finalizados</span>
+          <strong id="summary-finished">0</strong>
+        </div>
+      </section>
+
+      <section class="github-publish" aria-label="Publicación en GitHub">
+        <div class="admin-section-head">
+          <div>
+            <h2>Publicación GitHub</h2>
+            <p class="small">Sube los JSON editados al repositorio y dispara la publicación de GitHub Pages.</p>
+          </div>
+          <div class="admin-header-actions">
+            <button id="reload-base" type="button" class="secondary-button">Restaurar</button>
+            <button id="publish-github" type="button">Publicar en GitHub</button>
+          </div>
+        </div>
+        <label class="admin-field github-token-field">
+          <span>Token GitHub</span>
+          <input id="github-token" type="password" autocomplete="off" placeholder="Fine-grained token con Contents: write" />
+        </label>
+        <label class="admin-check github-remember">
+          <input id="github-remember-token" type="checkbox" />
+          <span>Recordar token en este dispositivo</span>
+        </label>
+      </section>
+
+      <p id="admin-message" class="admin-message" role="status">
+        Los cambios se aplican automáticamente en este navegador. Publica en GitHub para subirlos.
+      </p>
+
+      <nav class="admin-tabs" aria-label="Secciones de administracion">
+        <button class="admin-tab is-active" type="button" data-admin-section="event">Evento</button>
+        <button class="admin-tab" type="button" data-admin-section="groups">Grupos</button>
+        <button class="admin-tab" type="button" data-admin-section="matches">Partidos</button>
+        <button class="admin-tab" type="button" data-admin-section="elimination">Eliminatoria</button>
+        <button class="admin-tab" type="button" data-admin-section="sponsors">Patrocinadores</button>
+        <button class="admin-tab" type="button" data-admin-section="json">JSON</button>
+      </nav>
+
+      <section id="admin-content" class="admin-content"></section>
+    </main>
+
+    <script src="assets/data-store.js"></script>
+    <script src="assets/admin.js"></script>
+  </body>
+</html>

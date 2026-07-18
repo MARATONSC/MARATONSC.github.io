@@ -23,8 +23,8 @@ Actualmente el repositorio ya incluye:
 
 Con los archivos actuales en [`data/`](https://github.com/MARATONSC/MARATONSC.github.io/tree/main/data):
 
-- Hay 3 grupos (`A`, `B` y `C`).
-- Hay 30 partidos de fase de grupos en [`data/grupos.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/grupos.json).
+- Hay 3 grupos (`A`, `B` y `C`): los grupos `A` y `B` tienen 5 equipos, y el grupo `C` tiene 4 equipos.
+- Hay 26 partidos de fase de grupos en [`data/grupos.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/grupos.json).
 - Hay 8 partidos de eliminatoria en [`data/eliminatoria.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/eliminatoria.json): 4 cuartos, 2 semifinales, 1 tercer puesto y 1 final.
 - Todos los partidos están cargados como `Programado` y sin goles registrados.
 - La información del evento en [`data/evento.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/evento.json) indica actualmente:
@@ -54,7 +54,9 @@ Con los archivos actuales en [`data/`](https://github.com/MARATONSC/MARATONSC.gi
 ## Archivos clave
 
 - [`index.html`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/index.html): estructura de la página y toda la lógica JavaScript de renderizado.
+- [`admin.html`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/admin.html): panel estático para editar datos del campeonato desde el navegador.
 - [`assets/styles.css`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/assets/styles.css): estilos globales y responsive.
+- [`assets/data-store.js`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/assets/data-store.js): carga de datos compartida, guardado local del panel y cálculo automático de estados por horario.
 - [`data/maratonsc-data.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/maratonsc-data.json): manifiesto de fuentes de datos.
 - [`data/evento.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/evento.json): datos generales del evento y patrocinadores.
 - [`data/grupos.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/grupos.json): clasificación de grupos y calendario de la fase de grupos.
@@ -76,6 +78,14 @@ Después abre:
 http://localhost:8000
 ```
 
+Para usar el panel de administración en local:
+
+```text
+http://localhost:8000/admin.html
+```
+
+El PIN inicial del panel es `2026`. Se puede cambiar actualizando el hash `PIN_HASH` en [`assets/admin.js`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/assets/admin.js).
+
 ## Cómo se actualiza el contenido
 
 No hay backend ni base de datos. El contenido se mantiene editando los JSON dentro de [`data/`](https://github.com/MARATONSC/MARATONSC.github.io/tree/main/data).
@@ -84,6 +94,26 @@ No hay backend ni base de datos. El contenido se mantiene editando los JSON dent
 - Cambia [`data/grupos.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/grupos.json) para equipos, puntos y partidos de grupos.
 - Cambia [`data/eliminatoria.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/eliminatoria.json) para los cruces y resultados de eliminatoria.
 - Si en el futuro cambian las rutas de datos, actualiza [`data/maratonsc-data.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/maratonsc-data.json).
+
+También se puede usar [`admin.html`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/admin.html) para editar los datos sin tocar JSON a mano:
+
+- Cada edición se guarda automáticamente en el navegador actual, útil para previsualizar al instante.
+- `Publicar en GitHub` sube `data/evento.json`, `data/grupos.json` y `data/eliminatoria.json` al repositorio mediante GitHub API.
+- `Restaurar` descarta los cambios locales del navegador y vuelve a cargar los JSON publicados, previa confirmación.
+- Los partidos calculan el estado automáticamente con `fecha`, `hora` y la duración global `duracionPartidosMinutos`: antes del inicio son `Programado`, durante la duración son `Disputando` y después pasan a `Finalizado`.
+- Los partidos ya existentes no se añaden ni eliminan desde el panel; se editan sus equipos, fecha, hora, goles y estado.
+- En `Partidos` hay un filtro para mostrar todos los grupos o solo un grupo concreto.
+- Si un partido necesita estado fijo, marca `Manual` en el panel.
+- El PIN de `admin.html` es una barrera ligera en cliente. En una web estática pública no sustituye a una autenticación real con backend.
+
+Para publicar desde el panel con GitHub API:
+
+1. Crea un fine-grained personal access token en GitHub para el repositorio `MARATONSC/MARATONSC.github.io`.
+2. Dale permiso `Contents: Read and write`.
+3. Entra en `admin.html`, rellena el token en `Token GitHub` y pulsa `Publicar en GitHub`.
+4. El panel creará un único commit sobre la rama `main` con los tres JSON de `data/`.
+
+El token no se guarda en los archivos del proyecto. Si marcas `Recordar token en este dispositivo`, se guarda en el almacenamiento local de ese navegador para no tener que pegarlo cada vez. Desmarca esa casilla para borrarlo del dispositivo.
 
 ## Observaciones del estado actual
 

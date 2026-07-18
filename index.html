@@ -117,6 +117,7 @@
       <span>Todos los derechos reservados © <span id="event-organization">-</span>.</span>
     </footer>
 
+    <script src="assets/data-store.js"></script>
     <script>
       const UI = {
         dataManifestFile: "data/maratonsc-data.json",
@@ -961,32 +962,12 @@
         UI.syncTime.textContent = `Última actualización: ${new Date().toLocaleTimeString("es-ES")}`;
       };
 
-      const loadJson = async (file) => {
-        const response = await fetch(`${file}?v=${Date.now()}`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`No se pudo leer el archivo ${file}`);
-        return response.json();
-      };
-
       const loadData = async () => {
         try {
-          let manifest = {};
-          try {
-            manifest = await loadJson(UI.dataManifestFile);
-          } catch (error) {
-            manifest = {
-              fuentes: {
-                evento: UI.eventDataFile,
-                grupos: UI.groupsDataFile,
-                eliminatoria: UI.eliminationDataFile,
-              },
-            };
-          }
-
-          const [eventRaw, groupsRaw, eliminationRaw] = await Promise.all([
-            loadJson(pickField(manifest, ["fuentes", "sources"], {}).evento || UI.eventDataFile),
-            loadJson(pickField(manifest, ["fuentes", "sources"], {}).grupos || UI.groupsDataFile),
-            loadJson(pickField(manifest, ["fuentes", "sources"], {}).eliminatoria || UI.eliminationDataFile),
-          ]);
+          const loaded = MaratonDataStore.applyAutomaticStatuses(await MaratonDataStore.loadData());
+          const eventRaw = loaded.evento;
+          const groupsRaw = loaded.grupos;
+          const eliminationRaw = loaded.eliminatoria;
           const eventData = eventRaw.evento || eventRaw.event || eventRaw;
           renderEventData(eventData);
           renderSponsors(eventData.patrocinadores || eventData.sponsors || []);
@@ -997,7 +978,7 @@
 
           updateTimestamp();
         } catch (error) {
-          UI.groupsStatus.textContent = "No se pudo cargar los datos del torneo";
+          if (UI.groupsStatus) UI.groupsStatus.textContent = "No se pudo cargar los datos del torneo";
           console.error(error);
         }
       };
