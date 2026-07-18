@@ -8,7 +8,7 @@
         "visitante": "2ºRes",
         "fecha": "2026-07-25",
         "hora": "09:00",
-        "golesLocal": null,
+        "golesLocal": 1,
         "golesVisitante": null,
         "estado": "Programado"
       },
