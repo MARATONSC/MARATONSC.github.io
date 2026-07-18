@@ -1,25 +1,66 @@
 {
   "grupos": {
     "A": [
-      { "nombre": "Equipo A1", "puntos": 6 },
-      { "nombre": "Equipo A2", "puntos": 3 },
-      { "nombre": "Equipo A3", "puntos": 10 },
-      { "nombre": "Equipo A4", "puntos": 2 },
-      { "nombre": "Equipo A5", "puntos": 1 }
+      {
+        "nombre": "Equipo A1",
+        "puntos": 1
+      },
+      {
+        "nombre": "Equipo A2",
+        "puntos": 3
+      },
+      {
+        "nombre": "Equipo A3",
+        "puntos": 10
+      },
+      {
+        "nombre": "Equipo A4",
+        "puntos": 2
+      },
+      {
+        "nombre": "Equipo A5",
+        "puntos": 1
+      }
     ],
     "B": [
-      { "nombre": "Equipo B1", "puntos": 1 },
-      { "nombre": "Equipo B2", "puntos": 2},
-      { "nombre": "Equipo B3", "puntos": 3 },
-      { "nombre": "Equipo B4", "puntos": 5},
-      { "nombre": "Equipo B5", "puntos": 4}
+      {
+        "nombre": "Equipo B1",
+        "puntos": 1
+      },
+      {
+        "nombre": "Equipo B2",
+        "puntos": 2
+      },
+      {
+        "nombre": "Equipo B3",
+        "puntos": 3
+      },
+      {
+        "nombre": "Equipo B4",
+        "puntos": 5
+      },
+      {
+        "nombre": "Equipo B5",
+        "puntos": 4
+      }
     ],
     "C": [
-      { "nombre": "Equipo C1", "puntos": 9 },
-      { "nombre": "Equipo C2", "puntos": 8},
-      { "nombre": "Equipo C3", "puntos": 2},
-      { "nombre": "Equipo C4", "puntos": 0},
-      { "nombre": "Equipo C5", "puntos": 5}
+      {
+        "nombre": "Equipo C1",
+        "puntos": 9
+      },
+      {
+        "nombre": "Equipo C2",
+        "puntos": 8
+      },
+      {
+        "nombre": "Equipo C3",
+        "puntos": 2
+      },
+      {
+        "nombre": "Equipo C4",
+        "puntos": 0
+      }
     ]
   },
   "partidos": [
@@ -29,8 +70,8 @@
       "grupo": "A",
       "local": "Equipo A1",
       "visitante": "Equipo A2",
-      "fecha": "2026-07-25",
-      "hora": "08:00",
+      "fecha": "2026-07-19",
+      "hora": "09:00",
       "golesLocal": null,
       "golesVisitante": null,
       "estado": "Programado"
@@ -303,18 +344,6 @@
       "partido": "G-C-04",
       "fase": "Fase de grupos",
       "grupo": "C",
-      "local": "Equipo C1",
-      "visitante": "Equipo C5",
-      "fecha": "2026-07-26",
-      "hora": "13:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
-    },
-    {
-      "partido": "G-C-05",
-      "fase": "Fase de grupos",
-      "grupo": "C",
       "local": "Equipo C2",
       "visitante": "Equipo C3",
       "fecha": "2026-07-26",
@@ -324,61 +353,25 @@
       "estado": "Programado"
     },
     {
+      "partido": "G-C-05",
+      "fase": "Fase de grupos",
+      "grupo": "C",
+      "local": "Equipo C2",
+      "visitante": "Equipo C4",
+      "fecha": "2026-07-26",
+      "hora": "14:00",
+      "golesLocal": null,
+      "golesVisitante": null,
+      "estado": "Programado"
+    },
+    {
       "partido": "G-C-06",
       "fase": "Fase de grupos",
       "grupo": "C",
-      "local": "Equipo C2",
-      "visitante": "Equipo C4",
-      "fecha": "2026-07-26",
-      "hora": "14:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
-    },
-    {
-      "partido": "G-C-07",
-      "fase": "Fase de grupos",
-      "grupo": "C",
-      "local": "Equipo C2",
-      "visitante": "Equipo C5",
-      "fecha": "2026-07-26",
-      "hora": "14:30",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
-    },
-    {
-      "partido": "G-C-08",
-      "fase": "Fase de grupos",
-      "grupo": "C",
       "local": "Equipo C3",
       "visitante": "Equipo C4",
       "fecha": "2026-07-25",
       "hora": "14:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
-    },
-    {
-      "partido": "G-C-09",
-      "fase": "Fase de grupos",
-      "grupo": "C",
-      "local": "Equipo C3",
-      "visitante": "Equipo C5",
-      "fecha": "2026-07-25",
-      "hora": "14:30",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
-    },
-    {
-      "partido": "G-C-10",
-      "fase": "Fase de grupos",
-      "grupo": "C",
-      "local": "Equipo C4",
-      "visitante": "Equipo C5",
-      "fecha": "2026-07-25",
-      "hora": "15:00",
       "golesLocal": null,
       "golesVisitante": null,
       "estado": "Programado"
