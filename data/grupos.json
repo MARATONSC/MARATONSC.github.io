@@ -7,7 +7,7 @@
       },
       {
         "nombre": "KIOSKO",
-        "puntos": 0
+        "puntos": 6
       },
       {
         "nombre": "BRASIL 90",
@@ -60,9 +60,10 @@
       "visitante": "Equipo A2",
       "fecha": "2026-07-19",
       "hora": "09:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
+      "golesLocal": 0,
+      "golesVisitante": 0,
+      "estado": "Programado",
+      "estadoManual": true
     },
     {
       "partido": "G-A-02",
