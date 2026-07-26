@@ -3,62 +3,50 @@
     "A": [
       {
         "nombre": "APLAZADO",
-        "puntos": 1
+        "puntos": 0
       },
       {
-        "nombre": "POZOAMARGO",
-        "puntos": 3
+        "nombre": "KIOSKO",
+        "puntos": 0
       },
       {
         "nombre": "BRASIL 90",
-        "puntos": 10
+        "puntos": 0
       },
       {
         "nombre": "TRICOLOR",
-        "puntos": 2
-      },
-      {
-        "nombre": "Equipo A5",
-        "puntos": 1
+        "puntos": 0
       }
     ],
     "B": [
       {
-        "nombre": "Equipo B1",
-        "puntos": 1
+        "nombre": "SPORTIUM DE GIJÓN",
+        "puntos": 0
       },
       {
-        "nombre": "Equipo B2",
-        "puntos": 2
+        "nombre": "COPICHO CAUTION",
+        "puntos": 0
       },
       {
-        "nombre": "Equipo B3",
-        "puntos": 3
+        "nombre": "CARROCERIAS ESTESO",
+        "puntos": 0
       },
       {
-        "nombre": "Equipo B4",
-        "puntos": 5
-      },
-      {
-        "nombre": "Equipo B5",
-        "puntos": 4
+        "nombre": "ESTRELLA-2",
+        "puntos": 0
       }
     ],
     "C": [
       {
-        "nombre": "Equipo C1",
-        "puntos": 9
+        "nombre": "FURIA DEL CUBO ",
+        "puntos": 0
       },
       {
-        "nombre": "Equipo C2",
-        "puntos": 8
+        "nombre": "MOPRIFACHA",
+        "puntos": 0
       },
       {
-        "nombre": "Equipo C3",
-        "puntos": 2
-      },
-      {
-        "nombre": "Equipo C4",
+        "nombre": "NETE",
         "puntos": 0
       }
     ]
