@@ -7,7 +7,7 @@
         "local": "1ºA",
         "visitante": "2ºRes",
         "fecha": "2026-08-02",
-        "hora": "09:00",
+        "hora": "11:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado",
@@ -19,7 +19,7 @@
         "local": "1ºB",
         "visitante": "2ºC",
         "fecha": "2026-08-02",
-        "hora": "09:45",
+        "hora": "12:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -30,7 +30,7 @@
         "local": "1ºRes",
         "visitante": "2ºA",
         "fecha": "2026-08-02",
-        "hora": "10:30",
+        "hora": "13:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -41,7 +41,7 @@
         "local": "2ºB",
         "visitante": "1ºC",
         "fecha": "2026-08-02",
-        "hora": "11:15",
+        "hora": "14:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -54,7 +54,7 @@
         "local": "",
         "visitante": "",
         "fecha": "2026-08-02",
-        "hora": "18:00",
+        "hora": "15:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -65,7 +65,7 @@
         "local": "",
         "visitante": "",
         "fecha": "2026-08-02",
-        "hora": "18:45",
+        "hora": "16:00",
         "golesLocal": null,
         "golesVisitante": null,
         "estado": "Programado"
@@ -77,7 +77,7 @@
       "local": "PS1",
       "visitante": "PS2",
       "fecha": "2026-08-02",
-      "hora": "10:00",
+      "hora": "17:30",
       "golesLocal": null,
       "golesVisitante": null,
       "estado": "Programado"
@@ -88,7 +88,7 @@
       "local": "",
       "visitante": "",
       "fecha": "2026-08-02",
-      "hora": "10:30",
+      "hora": "19:00",
       "golesLocal": null,
       "golesVisitante": null,
       "estado": "Programado"
