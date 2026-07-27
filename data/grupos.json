@@ -56,7 +56,7 @@
       "partido": "G-A-01",
       "fase": "Fase de grupos",
       "grupo": "A",
-      "local": "TRICOLOR",
+      "local": "1ºA",
       "visitante": "Equipo A2",
       "fecha": "2026-08-01",
       "hora": "19:00",
@@ -129,13 +129,14 @@
       "partido": "G-B-01",
       "fase": "Fase de grupos",
       "grupo": "B",
-      "local": "Equipo B1",
+      "local": "APLAZADO",
       "visitante": "Equipo B2",
       "fecha": "2026-08-01",
       "hora": "12:00",
       "golesLocal": null,
       "golesVisitante": null,
-      "estado": "Programado"
+      "estado": "Finalizado",
+      "estadoManual": true
     },
     {
       "partido": "G-B-02",
