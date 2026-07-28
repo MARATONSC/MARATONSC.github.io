@@ -33,6 +33,7 @@ const AdminApp = (() => {
     grupos: { grupos: {}, partidos: [] },
     eliminatoria: { eliminatoria: {} },
   };
+  const pendingSponsorAssets = new Map();
   let activeSection = "event";
   let activeGroupMatchFilter = "all";
 
@@ -60,6 +61,109 @@ const AdminApp = (() => {
       binary += String.fromCharCode(byte);
     });
     return btoa(binary);
+  };
+
+  const fileToBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const [, content = ""] = result.split(",");
+      resolve(content);
+    };
+    reader.onerror = () => reject(reader.error || new Error("No se pudo leer el archivo."));
+    reader.readAsDataURL(file);
+  });
+
+  const imageExtension = (file) => {
+    const allowedExtensions = new Set(["gif", "jpeg", "jpg", "png", "svg", "webp"]);
+    const fromName = text(file?.name).match(/\.([a-z0-9]+)$/i)?.[1]?.toLowerCase();
+    if (fromName && allowedExtensions.has(fromName)) return fromName;
+    const byType = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+      "image/gif": "gif",
+      "image/svg+xml": "svg",
+    };
+    return byType[file?.type] || "";
+  };
+
+  const sponsorAssetSlug = (value, fallback) => {
+    const slug = text(value || fallback)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+    return slug || "patrocinador";
+  };
+
+  const sponsorAssetFilename = (sponsor, file, index) => {
+    const extension = imageExtension(file);
+    if (!extension) return "";
+    const base = sponsorAssetSlug(sponsor.nombre, text(file.name).replace(/\.[a-z0-9]+$/i, "") || `patrocinador_${index + 1}`);
+    return `${base}.${extension}`;
+  };
+
+  const sponsorImageFilename = (imageName) => {
+    return text(imageName).replace(/^assets\/sponsors\//i, "").replace(/^\/+/, "");
+  };
+
+  const uniqueSponsorAssetFilename = (fileName, sponsors = [], sponsorIndex = -1) => {
+    const used = new Set(
+      sponsors
+        .map((sponsor, index) => (index === sponsorIndex ? "" : sponsorImageFilename(sponsor?.imagen)))
+        .filter(Boolean),
+    );
+    const match = fileName.match(/^(.*?)(\.[^.]+)$/);
+    const base = match ? match[1] : fileName;
+    const extension = match ? match[2] : "";
+    let candidate = fileName;
+    let counter = 2;
+    while (used.has(candidate) || pendingSponsorAssets.has(`assets/sponsors/${candidate}`)) {
+      candidate = `${base}_${counter}${extension}`;
+      counter += 1;
+    }
+    return candidate;
+  };
+
+  const pendingSponsorAssetFor = (imageName) => {
+    const filename = sponsorImageFilename(imageName);
+    return filename ? pendingSponsorAssets.get(`assets/sponsors/${filename}`) : null;
+  };
+
+  const clearPendingSponsorAssetFor = (imageName) => {
+    const filename = sponsorImageFilename(imageName);
+    if (!filename) return;
+    const asset = pendingSponsorAssets.get(`assets/sponsors/${filename}`);
+    if (asset?.previewUrl) URL.revokeObjectURL(asset.previewUrl);
+    pendingSponsorAssets.delete(`assets/sponsors/${filename}`);
+  };
+
+  const sponsorImagePath = (imageName) => {
+    const raw = text(imageName);
+    if (!raw) return "";
+    if (/^(https?:\/\/|\/|data:)/i.test(raw)) return raw;
+    const filename = sponsorImageFilename(raw);
+    if (/\.[a-z0-9]+$/i.test(filename)) return `assets/sponsors/${filename}`;
+    return `assets/sponsors/${filename}.jpeg`;
+  };
+
+  const sponsorUploadPreview = (sponsor) => {
+    const pendingAsset = pendingSponsorAssetFor(sponsor.imagen);
+    const imageSrc = pendingAsset?.previewUrl || sponsorImagePath(sponsor.imagen);
+    const status = pendingAsset
+      ? `<strong>Pendiente:</strong> ${escapeHtml(pendingAsset.fileName)}`
+      : text(sponsor.imagen)
+        ? escapeHtml(text(sponsor.imagen))
+        : "Sin imagen seleccionada";
+
+    return `
+      <div class="sponsor-upload-preview">
+        ${imageSrc ? `<img src="${escapeHtml(imageSrc)}" alt="" />` : `<span>Sin imagen</span>`}
+        <p>${status}</p>
+      </div>
+    `;
   };
 
   const sha256 = async (value) => {
@@ -243,14 +347,18 @@ const AdminApp = (() => {
     });
 
     const treeItems = [];
-    for (const [path, data] of files) {
+    for (const file of files) {
+      const path = Array.isArray(file) ? file[0] : file.path;
+      const data = Array.isArray(file) ? file[1] : file.data;
+      const content = Array.isArray(file) || file.data !== undefined ? toBase64(jsonText(data)) : file.content;
+      const encoding = file.encoding || "base64";
       setMessage(`Preparando ${path}...`);
       const blob = await githubRequest(`${base}/git/blobs`, {
         method: "POST",
         headers: githubHeaders(config.token),
         body: JSON.stringify({
-          content: toBase64(jsonText(data)),
-          encoding: "base64",
+          content,
+          encoding,
         }),
       });
       treeItems.push({
@@ -306,10 +414,16 @@ const AdminApp = (() => {
       ["data/evento.json", state.evento],
       ["data/grupos.json", state.grupos],
       ["data/eliminatoria.json", state.eliminatoria],
+      ...Array.from(pendingSponsorAssets.values()).map((asset) => ({
+        path: asset.path,
+        content: asset.content,
+        encoding: "base64",
+      })),
     ];
 
     try {
       await createGithubCommit(config, files);
+      pendingSponsorAssets.clear();
       setMessage("Datos publicados en GitHub en un único commit. GitHub Pages actualizará la web en unos minutos.");
     } catch (error) {
       setMessage(`No se pudo publicar en GitHub: ${error.message}`, true);
@@ -796,6 +910,11 @@ const AdminApp = (() => {
               ${input("Nombre", sponsor.nombre || "", null, `data-sponsor-index="${index}" data-sponsor-field="nombre"`)}
               ${input("Imagen", sponsor.imagen || "", null, `data-sponsor-index="${index}" data-sponsor-field="imagen"`)}
               ${input("Enlace", sponsor.enlace || "", null, `data-sponsor-index="${index}" data-sponsor-field="enlace"`)}
+              <label class="admin-field sponsor-file-field">
+                <span>Subir foto al repositorio</span>
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" data-sponsor-file="${index}" />
+              </label>
+              ${sponsorUploadPreview(sponsor)}
             </div>
           </article>
         `).join("")}
@@ -812,14 +931,59 @@ const AdminApp = (() => {
       field.addEventListener("input", () => {
         const sponsor = event.patrocinadores[Number(field.dataset.sponsorIndex)];
         if (!sponsor) return;
+        if (field.dataset.sponsorField === "imagen") clearPendingSponsorAssetFor(sponsor.imagen);
         sponsor[field.dataset.sponsorField] = field.value;
         persistChanges();
       });
     });
 
+    refs.content.querySelectorAll("[data-sponsor-file]").forEach((field) => {
+      field.addEventListener("change", async () => {
+        const sponsorIndex = Number(field.dataset.sponsorFile);
+        const sponsor = event.patrocinadores[sponsorIndex];
+        const file = field.files?.[0];
+        if (!sponsor || !file) return;
+
+        if (!imageExtension(file)) {
+          setMessage("Selecciona un archivo de imagen válido.", true);
+          field.value = "";
+          return;
+        }
+
+        const fileName = uniqueSponsorAssetFilename(
+          sponsorAssetFilename(sponsor, file, sponsorIndex),
+          event.patrocinadores,
+          sponsorIndex,
+        );
+        if (!fileName) {
+          setMessage("No se pudo detectar la extensión de la imagen.", true);
+          field.value = "";
+          return;
+        }
+
+        try {
+          clearPendingSponsorAssetFor(sponsor.imagen);
+          const path = `assets/sponsors/${fileName}`;
+          pendingSponsorAssets.set(path, {
+            path,
+            content: await fileToBase64(file),
+            fileName,
+            originalName: file.name,
+            previewUrl: URL.createObjectURL(file),
+          });
+          sponsor.imagen = fileName;
+          persistChanges(`Foto preparada: ${fileName}. Pulsa "Publicar en GitHub" para subirla al repositorio.`);
+          renderSponsors();
+        } catch (error) {
+          setMessage(`No se pudo preparar la foto: ${error.message}`, true);
+        }
+      });
+    });
+
     refs.content.querySelectorAll("[data-delete-sponsor]").forEach((button) => {
       button.addEventListener("click", () => {
-        event.patrocinadores.splice(Number(button.dataset.deleteSponsor), 1);
+        const [deleted] = event.patrocinadores.splice(Number(button.dataset.deleteSponsor), 1);
+        if (deleted) clearPendingSponsorAssetFor(deleted.imagen);
         persistChanges();
         render();
       });
