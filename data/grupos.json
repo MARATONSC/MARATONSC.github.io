@@ -2,11 +2,11 @@
   "grupos": {
     "A": [
       {
-        "nombre": "APLAZADO",
+        "nombre": "CARROCERIAS ESTESO",
         "puntos": 0
       },
       {
-        "nombre": "KIOSKO",
+        "nombre": "TRICOLOR",
         "puntos": 0
       },
       {
@@ -14,31 +14,13 @@
         "puntos": 0
       },
       {
-        "nombre": "TRICOLOR",
+        "nombre": "FURIA DEL CUBO",
         "puntos": 0
       }
     ],
     "B": [
       {
-        "nombre": "SPORTIUM DE GIJÓN",
-        "puntos": 0
-      },
-      {
-        "nombre": "COPICHO CAUTION",
-        "puntos": 0
-      },
-      {
-        "nombre": "CARROCERIAS ESTESO",
-        "puntos": 0
-      },
-      {
-        "nombre": "ESTRELLA-2",
-        "puntos": 0
-      }
-    ],
-    "C": [
-      {
-        "nombre": "FURIA DEL CUBO ",
+        "nombre": "APLAZADO",
         "puntos": 0
       },
       {
@@ -46,7 +28,25 @@
         "puntos": 0
       },
       {
+        "nombre": "SPORTIUM DE GIJON",
+        "puntos": 0
+      },
+      {
+        "nombre": "COPICHO CAUTION",
+        "puntos": 0
+      }
+    ],
+    "C": [
+      {
+        "nombre": "ESTRELLA-2",
+        "puntos": 0
+      },
+      {
         "nombre": "GARCINOX",
+        "puntos": 0
+      },
+      {
+        "nombre": "KIOSKO",
         "puntos": 0
       }
     ]
