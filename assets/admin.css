@@ -248,6 +248,7 @@
 .match-editor-card select,
 .global-duration-field input {
   width: 100%;
+  min-width: 0;
   border: 1px solid #94a3b8;
   border-radius: 9px;
   padding: 0.62rem 0.7rem;
@@ -289,7 +290,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .admin-check input {
@@ -303,6 +304,7 @@
 }
 
 .admin-card {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0.75rem;
@@ -327,7 +329,7 @@
 }
 
 .admin-table {
-  min-width: 520px;
+  min-width: 820px;
 }
 
 .admin-table th,
@@ -360,12 +362,29 @@
   min-width: 0;
 }
 
+.standing-qualified td {
+  background: rgba(16, 185, 129, 0.13);
+}
+
+.standing-eliminated td {
+  background: rgba(248, 113, 113, 0.16);
+  color: #7f1d1d;
+}
+
+.admin-group-matches {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
 .match-editor-list {
   display: grid;
   gap: 0.8rem;
 }
 
 .match-editor-card {
+  min-width: 0;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 0.8rem;
@@ -616,6 +635,15 @@
 
 @media (max-width: 760px) {
   .admin-header,
+  .admin-shell {
+    width: calc(100% - 1rem);
+  }
+
+  .admin-content {
+    padding: 0.75rem;
+  }
+
+  .admin-header,
   .admin-section-head {
     flex-direction: column;
     align-items: stretch;
@@ -629,6 +657,7 @@
   .admin-header-actions > *,
   .admin-actions > * {
     text-align: center;
+    max-width: 100%;
   }
 
   .admin-summary,
@@ -640,11 +669,41 @@
     grid-template-columns: 1fr;
   }
 
+  .match-date-time {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .date-input,
+  .time-input {
+    min-width: 0;
+  }
+
   .score-stepper {
     justify-items: start;
   }
 
+  .global-duration-field {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
   .sponsor-upload-preview {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .match-date-time {
+    grid-template-columns: 1fr;
+  }
+
+  .score-stepper > div {
+    grid-template-columns: 44px 56px 44px;
+  }
+
+  .score-button {
+    min-width: 44px;
   }
 }

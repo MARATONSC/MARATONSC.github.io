@@ -201,6 +201,7 @@
       };
 
       const scoreValue = (value) => {
+        if (value === null || value === undefined || value === "") return null;
         const n = Number(value);
         return Number.isFinite(n) ? Math.trunc(n) : null;
       };
@@ -441,53 +442,27 @@
         );
       };
 
-      const buildQualificationMap = (groups = {}) => {
-        const rankedByGroup = {};
-        const allTeams = [];
-
-        ["A", "B", "C"].forEach((groupCode) => {
-          const teams = Array.isArray(groups[groupCode]) ? groups[groupCode] : [];
-        const normalized = teams
-          .map((teamObj, index) => ({
-            name: teamName(teamObj),
-            points: teamPoints(pickField(teamObj, ["puntos", "points"], 0)),
-            group: groupCode,
-            index,
-            qualify: null,
-          }))
-            .sort((a, b) => {
-              if (b.points !== a.points) return b.points - a.points;
-              return a.name.localeCompare(b.name);
-            });
-
-          normalized.forEach((team, position) => {
-            team.qualify = position < 2 ? "directo" : null;
-          });
-
-          rankedByGroup[groupCode] = normalized;
-          allTeams.push(...normalized);
-        });
-
-        allTeams
-          .filter((team) => team.qualify === null)
-          .sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
-            if (a.group !== b.group) return a.group.localeCompare(b.group);
-            return a.index - b.index;
-          })
-          .slice(0, 2)
-          .forEach((team) => {
-            team.qualify = "repechaje";
-          });
-
-        return rankedByGroup;
+      const buildQualificationMap = (groups = {}, matches = []) => {
+        return MaratonDataStore.calculateGroupStandings(groups, matches);
       };
 
       const buildGroupTable = (teams = []) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "group-table-wrap";
         const table = document.createElement("table");
+        table.className = "group-table";
         table.innerHTML = `
           <thead>
-            <tr><th>Equipo</th><th>Puntos</th></tr>
+            <tr>
+              <th>Equipo</th>
+              <th>PJ</th>
+              <th>G</th>
+              <th>E</th>
+              <th>P</th>
+              <th>GF</th>
+              <th>GC</th>
+              <th>Pts</th>
+            </tr>
           </thead>
         `;
 
@@ -499,24 +474,34 @@
           if (teamObj.qualify === "repechaje") tr.className = "team-qualified repechage";
           if (teamObj.qualify === null) tr.className = "team-qualified eliminated";
 
-          tr.innerHTML = `<td>${teamObj.name}</td><td>${teamObj.points}</td>`;
+          tr.innerHTML = `
+            <td>${teamObj.nombre}</td>
+            <td>${teamObj.played}</td>
+            <td>${teamObj.won}</td>
+            <td>${teamObj.drawn}</td>
+            <td>${teamObj.lost}</td>
+            <td>${teamObj.goalsFor}</td>
+            <td>${teamObj.goalsAgainst}</td>
+            <td>${teamObj.points}</td>
+          `;
           body.appendChild(tr);
         });
 
         if (teams.length === 0) {
           const tr = document.createElement("tr");
           tr.className = "muted";
-          tr.innerHTML = `<td colspan="2">Sin equipos definidos</td>`;
+          tr.innerHTML = `<td colspan="8">Sin equipos definidos</td>`;
           body.appendChild(tr);
         }
 
         table.appendChild(body);
-        return table;
+        wrapper.appendChild(table);
+        return wrapper;
       };
 
-      const renderGroups = (groups = {}) => {
+      const renderGroups = (groups = {}, matches = []) => {
         UI.groupsGrid.replaceChildren();
-        const qualifiedGroups = buildQualificationMap(groups);
+        const qualifiedGroups = buildQualificationMap(groups, matches);
 
         ["A", "B", "C"].forEach((groupCode) => {
           const teams = qualifiedGroups[groupCode] || [];
@@ -971,8 +956,8 @@
           const eventData = eventRaw.evento || eventRaw.event || eventRaw;
           renderEventData(eventData);
           renderSponsors(eventData.patrocinadores || eventData.sponsors || []);
-          renderGroups(groupsRaw.grupos || groupsRaw.groups || {});
           groupMatches = getGroupMatchList(groupsRaw);
+          renderGroups(groupsRaw.grupos || groupsRaw.groups || {}, groupMatches);
           renderElimination(eliminationRaw.eliminatoria || eliminationRaw.elimination || {});
           renderProgramacion();
 

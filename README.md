@@ -91,7 +91,7 @@ El PIN inicial del panel es `2026`. Se puede cambiar actualizando el hash `PIN_H
 No hay backend ni base de datos. El contenido se mantiene editando los JSON dentro de [`data/`](https://github.com/MARATONSC/MARATONSC.github.io/tree/main/data).
 
 - Cambia [`data/evento.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/evento.json) para fecha, lugar, organización y patrocinadores.
-- Cambia [`data/grupos.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/grupos.json) para equipos, puntos y partidos de grupos.
+- Cambia [`data/grupos.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/grupos.json) para equipos y partidos de grupos. La clasificación se calcula desde los resultados: puntos, enfrentamiento directo si hay empate y diferencia de goles si el directo también queda empatado.
 - Cambia [`data/eliminatoria.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/eliminatoria.json) para los cruces y resultados de eliminatoria.
 - Si en el futuro cambian las rutas de datos, actualiza [`data/maratonsc-data.json`](https://github.com/MARATONSC/MARATONSC.github.io/blob/main/data/maratonsc-data.json).
 
@@ -101,8 +101,8 @@ También se puede usar [`admin.html`](https://github.com/MARATONSC/MARATONSC.git
 - `Publicar en GitHub` sube `data/evento.json`, `data/grupos.json` y `data/eliminatoria.json` al repositorio mediante GitHub API.
 - `Restaurar` descarta los cambios locales del navegador y vuelve a cargar los JSON publicados, previa confirmación.
 - Los partidos calculan el estado automáticamente con `fecha`, `hora` y la duración global `duracionPartidosMinutos`: antes del inicio son `Programado`, durante la duración son `Disputando` y después pasan a `Finalizado`.
-- Los partidos ya existentes no se añaden ni eliminan desde el panel; se editan sus equipos, fecha, hora, goles y estado.
-- En `Partidos` hay un filtro para mostrar todos los grupos o solo un grupo concreto.
+- Los partidos ya existentes no se añaden ni eliminan desde el panel; en `Fase de grupos` se editan sus equipos, fecha, hora, goles y estado debajo de las tablas calculadas.
+- En `Fase de grupos` hay un filtro para mostrar todos los grupos o solo un grupo concreto.
 - Si un partido necesita estado fijo, marca `Manual` en el panel.
 - El PIN de `admin.html` es una barrera ligera en cliente. En una web estática pública no sustituye a una autenticación real con backend.
 

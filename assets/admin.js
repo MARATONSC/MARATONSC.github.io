@@ -433,10 +433,10 @@ const AdminApp = (() => {
   };
 
   const render = () => {
+    if (activeSection === "matches") activeSection = "groups";
     refs.tabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.adminSection === activeSection));
     if (activeSection === "event") renderEvent();
     if (activeSection === "groups") renderGroups();
-    if (activeSection === "matches") renderGroupMatches();
     if (activeSection === "elimination") renderElimination();
     if (activeSection === "sponsors") renderSponsors();
     if (activeSection === "json") renderJson();
@@ -480,18 +480,38 @@ const AdminApp = (() => {
   };
 
   const renderGroups = () => {
-    const groups = ensureGroupsRoot().grupos;
+    const groupsRoot = ensureGroupsRoot();
+    const groups = groupsRoot.grupos;
+    const matchGroups = groupCodesForFilter(groups, groupsRoot.partidos);
+    if (activeGroupMatchFilter !== "all" && !matchGroups.includes(activeGroupMatchFilter)) {
+      activeGroupMatchFilter = "all";
+    }
+    const visibleMatches = groupsRoot.partidos
+      .map((match, sourceIndex) => ({ match, sourceIndex }))
+      .filter(({ match }) => activeGroupMatchFilter === "all" || text(match.grupo) === activeGroupMatchFilter);
+
     refs.content.innerHTML = `
       <div class="admin-section-head">
         <div>
-          <h2>Grupos</h2>
-          <p class="small">Equipos y puntos de la fase de grupos.</p>
+          <h2>Fase de grupos</h2>
+          <p class="small">Equipos, clasificación calculada y resultados de la fase de grupos.</p>
         </div>
         <button id="add-group" type="button">Añadir grupo</button>
       </div>
-      <div class="admin-list">
-        ${Object.entries(groups).map(([groupCode, teams]) => groupCard(groupCode, teams)).join("")}
+      <div id="admin-groups-list" class="admin-list">
+        ${groupCardsMarkup(groups)}
       </div>
+      <section class="admin-group-matches" aria-label="Partidos de fase de grupos">
+        <div class="admin-section-head">
+          <div>
+            <h2>Resultados de grupos</h2>
+            <p class="small">Anota aquí los partidos de la fase de grupos. Las tablas superiores se recalculan con estos resultados.</p>
+          </div>
+        </div>
+        ${durationSetting()}
+        ${groupMatchFilter(matchGroups)}
+        ${matchTable(visibleMatches, "group")}
+      </section>
     `;
 
     refs.content.querySelector("#add-group")?.addEventListener("click", () => {
@@ -504,23 +524,39 @@ const AdminApp = (() => {
       render();
     });
 
+    bindGroupControls(groups);
+    bindDurationSetting();
+    bindGroupMatchFilter();
+    bindMatchTable(groupsRoot.partidos, "group");
+  };
+
+  const groupCardsMarkup = (groups = {}) => {
+    const standings = MaratonDataStore.calculateGroupStandings(groups, ensureGroupsRoot().partidos);
+    return Object.entries(groups).map(([groupCode]) => groupCard(groupCode, standings[groupCode] || [])).join("");
+  };
+
+  const refreshAdminGroupStandings = () => {
+    const groups = ensureGroupsRoot().grupos;
+    const list = refs.content.querySelector("#admin-groups-list");
+    if (!list) return;
+    list.innerHTML = groupCardsMarkup(groups);
+    bindGroupControls(groups);
+  };
+
+  const bindGroupControls = (groups) => {
     refs.content.querySelectorAll("[data-team-field]").forEach((field) => {
       field.addEventListener("input", () => {
         const teams = groups[field.dataset.group] || [];
         const team = teams[Number(field.dataset.index)];
         if (!team) return;
-        if (field.dataset.teamField === "puntos") {
-          team.puntos = Number(field.value) || 0;
-        } else {
-          team.nombre = field.value;
-        }
+        team.nombre = field.value;
         persistChanges();
       });
     });
 
     refs.content.querySelectorAll("[data-add-team]").forEach((button) => {
       button.addEventListener("click", () => {
-        groups[button.dataset.addTeam].push({ nombre: "Nuevo equipo", puntos: 0 });
+        groups[button.dataset.addTeam].push({ nombre: "Nuevo equipo" });
         persistChanges();
         render();
       });
@@ -555,16 +591,35 @@ const AdminApp = (() => {
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
-            <tr><th>Equipo</th><th>Puntos</th><th></th></tr>
+            <tr>
+              <th>Equipo</th>
+              <th>PJ</th>
+              <th>G</th>
+              <th>E</th>
+              <th>P</th>
+              <th>GF</th>
+              <th>GC</th>
+              <th>Pts</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
-            ${teams.map((team, index) => `
-              <tr>
-                <td><input data-group="${groupCode}" data-index="${index}" data-team-field="nombre" value="${escapeHtml(team.nombre)}" /></td>
-                <td><input type="number" data-group="${groupCode}" data-index="${index}" data-team-field="puntos" value="${Number(team.puntos) || 0}" /></td>
-                <td><button type="button" class="danger-button" data-group="${groupCode}" data-delete-team="${index}">Eliminar</button></td>
+            ${teams.map((team) => `
+              <tr class="${team.qualify ? "standing-qualified" : "standing-eliminated"}">
+                <td><input data-group="${groupCode}" data-index="${team.index}" data-team-field="nombre" value="${escapeHtml(team.nombre)}" /></td>
+                <td>${team.played}</td>
+                <td>${team.won}</td>
+                <td>${team.drawn}</td>
+                <td>${team.lost}</td>
+                <td>${team.goalsFor}</td>
+                <td>${team.goalsAgainst}</td>
+                <td>${team.points}</td>
+                <td>${team.qualify ? "Clasifica" : "Eliminado"}</td>
+                <td><button type="button" class="danger-button" data-group="${groupCode}" data-delete-team="${team.index}">Eliminar</button></td>
               </tr>
             `).join("")}
+            ${teams.length ? "" : `<tr class="muted"><td colspan="10">Sin equipos definidos</td></tr>`}
           </tbody>
         </table>
       </div>
@@ -653,6 +708,11 @@ const AdminApp = (() => {
     return uniqueValues(matches.map((match) => match.grupo)).sort((a, b) => a.localeCompare(b, "es"));
   };
 
+  const groupCodesForFilter = (groups = {}, matches = []) => {
+    return uniqueValues([...Object.keys(groups || {}), ...matches.map((match) => match.grupo)])
+      .sort((a, b) => a.localeCompare(b, "es"));
+  };
+
   const teamNames = () => {
     const groups = ensureGroupsRoot().grupos;
     return uniqueValues(
@@ -718,7 +778,7 @@ const AdminApp = (() => {
   const bindGroupMatchFilter = () => {
     refs.content.querySelector("[data-group-match-filter]")?.addEventListener("change", (event) => {
       activeGroupMatchFilter = event.target.value;
-      renderGroupMatches();
+      renderGroups();
     });
   };
 
@@ -821,6 +881,7 @@ const AdminApp = (() => {
         }
         updateMatchRowStatus(field.closest(".match-editor-card"), match);
         persistChanges();
+        if (key === "group") refreshAdminGroupStandings();
       });
     });
 
@@ -840,6 +901,7 @@ const AdminApp = (() => {
         if (input) input.value = match[fieldName];
         updateMatchRowStatus(row, match);
         persistChanges();
+        if (key === "group") refreshAdminGroupStandings();
       });
     });
 
@@ -853,6 +915,7 @@ const AdminApp = (() => {
         match.estadoManual = true;
         updateMatchRowStatus(button.closest(".match-editor-card"), match);
         persistChanges();
+        if (key === "group") refreshAdminGroupStandings();
       });
     });
   };

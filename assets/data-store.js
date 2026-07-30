@@ -12,6 +12,7 @@ const MaratonDataStore = (() => {
   const toText = (value) => String(value || "").trim();
 
   const scoreValue = (value) => {
+    if (value === null || value === undefined || value === "") return null;
     const n = Number(value);
     return Number.isFinite(n) ? Math.trunc(n) : null;
   };
@@ -158,6 +159,149 @@ const MaratonDataStore = (() => {
       && scoreValue(pickField(match, ["golesVisitante", "scoreAway", "golesFuera"], null)) !== null;
   };
 
+  const teamName = (teamObj = {}) => {
+    if (typeof teamObj === "string") return toText(teamObj);
+    return toText(pickField(teamObj, ["nombre", "name", "equipo", "team"], "Sin nombre"));
+  };
+
+  const teamKey = (value) => {
+    return toText(value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  };
+
+  const emptyStanding = (teamObj = {}, groupCode = "", index = 0) => ({
+    ...teamObj,
+    nombre: teamName(teamObj),
+    group: groupCode,
+    index,
+    played: 0,
+    won: 0,
+    drawn: 0,
+    lost: 0,
+    goalsFor: 0,
+    goalsAgainst: 0,
+    goalDifference: 0,
+    points: 0,
+    qualify: null,
+  });
+
+  const applyStandingResult = (standing, goalsFor, goalsAgainst) => {
+    standing.played += 1;
+    standing.goalsFor += goalsFor;
+    standing.goalsAgainst += goalsAgainst;
+    standing.goalDifference = standing.goalsFor - standing.goalsAgainst;
+    if (goalsFor > goalsAgainst) {
+      standing.won += 1;
+      standing.points += 3;
+    } else if (goalsFor < goalsAgainst) {
+      standing.lost += 1;
+    } else {
+      standing.drawn += 1;
+      standing.points += 1;
+    }
+  };
+
+  const directMatchComparison = (a, b, directMatches = []) => {
+    let aDirectPoints = 0;
+    let bDirectPoints = 0;
+    let hasDirectMatch = false;
+
+    directMatches.forEach((match) => {
+      const aHome = match.homeKey === teamKey(a.nombre);
+      const aAway = match.awayKey === teamKey(a.nombre);
+      const bHome = match.homeKey === teamKey(b.nombre);
+      const bAway = match.awayKey === teamKey(b.nombre);
+      if ((!aHome && !aAway) || (!bHome && !bAway)) return;
+
+      const aGoals = aHome ? match.homeGoals : match.awayGoals;
+      const bGoals = bHome ? match.homeGoals : match.awayGoals;
+      hasDirectMatch = true;
+
+      if (aGoals > bGoals) {
+        aDirectPoints += 3;
+      } else if (aGoals < bGoals) {
+        bDirectPoints += 3;
+      } else {
+        aDirectPoints += 1;
+        bDirectPoints += 1;
+      }
+    });
+
+    if (!hasDirectMatch || aDirectPoints === bDirectPoints) return 0;
+    return bDirectPoints - aDirectPoints;
+  };
+
+  const compareGoalDifference = (a, b) => {
+    if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+    return a.index - b.index;
+  };
+
+  const comparePairTie = (directMatches = []) => (a, b) => {
+    const directComparison = directMatchComparison(a, b, directMatches);
+    if (directComparison !== 0) return directComparison;
+    return compareGoalDifference(a, b);
+  };
+
+  const rankStandings = (standings = [], directMatches = []) => {
+    const byPoints = new Map();
+    standings.forEach((standing) => {
+      const bucket = byPoints.get(standing.points) || [];
+      bucket.push(standing);
+      byPoints.set(standing.points, bucket);
+    });
+
+    return [...byPoints.keys()]
+      .sort((a, b) => b - a)
+      .flatMap((points) => {
+        const bucket = byPoints.get(points);
+        if (bucket.length === 2) return bucket.sort(comparePairTie(directMatches));
+        return bucket.sort(compareGoalDifference);
+      });
+  };
+
+  const calculateGroupStandings = (groups = {}, matches = []) => {
+    const result = {};
+
+    Object.entries(groups || {}).forEach(([groupCode, teams]) => {
+      const standings = Array.isArray(teams)
+        ? teams.map((teamObj, index) => emptyStanding(teamObj, groupCode, index))
+        : [];
+      const byName = new Map(standings.map((standing) => [teamKey(standing.nombre), standing]));
+      const completedGroupMatches = [];
+
+      (Array.isArray(matches) ? matches : [])
+        .filter((match) => toText(match.grupo) === toText(groupCode))
+        .forEach((match) => {
+          const homeGoals = scoreValue(pickField(match, ["golesLocal", "scoreHome", "golesCasa"], null));
+          const awayGoals = scoreValue(pickField(match, ["golesVisitante", "scoreAway", "golesFuera"], null));
+          if (homeGoals === null || awayGoals === null) return;
+
+          const homeStanding = byName.get(teamKey(pickField(match, ["local", "teamHome", "equipoLocal", "home"], "")));
+          const awayStanding = byName.get(teamKey(pickField(match, ["visitante", "teamAway", "equipoVisitante", "away"], "")));
+          if (homeStanding) applyStandingResult(homeStanding, homeGoals, awayGoals);
+          if (awayStanding) applyStandingResult(awayStanding, awayGoals, homeGoals);
+          if (homeStanding && awayStanding) {
+            completedGroupMatches.push({
+              homeKey: teamKey(homeStanding.nombre),
+              awayKey: teamKey(awayStanding.nombre),
+              homeGoals,
+              awayGoals,
+            });
+          }
+        });
+
+      result[groupCode] = rankStandings(standings, completedGroupMatches);
+      const eliminatedCount = result[groupCode].length > 1 ? 1 : 0;
+      result[groupCode].forEach((standing, position) => {
+        standing.qualify = position < result[groupCode].length - eliminatedCount ? "directo" : null;
+      });
+    });
+
+    return result;
+  };
+
   const getTimedStatus = (match = {}, now = Date.now(), durationFallback = AUTO_DURATION_MINUTES) => {
     const status = toText(pickField(match, ["estado", "status"], "Programado"));
     if (status === "Finalizado" && hasManualResult(match)) return "Finalizado";
@@ -232,6 +376,7 @@ const MaratonDataStore = (() => {
     loadJson,
     downloadJson,
     applyAutomaticStatuses,
+    calculateGroupStandings,
     getTimedStatus,
     matchDurationMinutes,
     globalDurationMinutes,
