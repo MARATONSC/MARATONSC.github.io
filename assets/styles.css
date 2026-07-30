@@ -633,7 +633,7 @@ button:hover {
   text-align: right;
 }
 
-.group-table td:last-child {
+.group-table td:nth-child(2) {
   font-weight: 800;
 }
 

@@ -455,13 +455,14 @@
           <thead>
             <tr>
               <th>Equipo</th>
+              <th>Pts</th>
               <th>PJ</th>
               <th>G</th>
               <th>E</th>
               <th>P</th>
               <th>GF</th>
               <th>GC</th>
-              <th>Pts</th>
+              <th>Dif</th>
             </tr>
           </thead>
         `;
@@ -476,13 +477,14 @@
 
           tr.innerHTML = `
             <td>${teamObj.nombre}</td>
+            <td>${teamObj.points}</td>
             <td>${teamObj.played}</td>
             <td>${teamObj.won}</td>
             <td>${teamObj.drawn}</td>
             <td>${teamObj.lost}</td>
             <td>${teamObj.goalsFor}</td>
             <td>${teamObj.goalsAgainst}</td>
-            <td>${teamObj.points}</td>
+            <td>${teamObj.goalDifference}</td>
           `;
           body.appendChild(tr);
         });

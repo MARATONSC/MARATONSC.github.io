@@ -593,13 +593,14 @@ const AdminApp = (() => {
           <thead>
             <tr>
               <th>Equipo</th>
+              <th>Pts</th>
               <th>PJ</th>
               <th>G</th>
               <th>E</th>
               <th>P</th>
               <th>GF</th>
               <th>GC</th>
-              <th>Pts</th>
+              <th>Dif</th>
               <th>Estado</th>
               <th></th>
             </tr>
@@ -608,13 +609,14 @@ const AdminApp = (() => {
             ${teams.map((team) => `
               <tr class="${team.qualify ? "standing-qualified" : "standing-eliminated"}">
                 <td><input data-group="${groupCode}" data-index="${team.index}" data-team-field="nombre" value="${escapeHtml(team.nombre)}" /></td>
+                <td>${team.points}</td>
                 <td>${team.played}</td>
                 <td>${team.won}</td>
                 <td>${team.drawn}</td>
                 <td>${team.lost}</td>
                 <td>${team.goalsFor}</td>
                 <td>${team.goalsAgainst}</td>
-                <td>${team.points}</td>
+                <td>${team.goalDifference}</td>
                 <td>${team.qualify ? "Clasifica" : "Eliminado"}</td>
                 <td><button type="button" class="danger-button" data-group="${groupCode}" data-delete-team="${team.index}">Eliminar</button></td>
               </tr>
