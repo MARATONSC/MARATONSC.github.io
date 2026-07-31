@@ -81,6 +81,18 @@
       "partido": "G-A-03",
       "fase": "Fase de grupos",
       "grupo": "A",
+      "local": "CARROCERIAS ESTESO",
+      "visitante": "BRASIL 90",
+      "fecha": "2026-08-02",
+      "hora": "00:00",
+      "golesLocal": null,
+      "golesVisitante": null,
+      "estado": "Programado"
+    },
+    {
+      "partido": "G-A-04",
+      "fase": "Fase de grupos",
+      "grupo": "A",
       "local": "TRICOLOR",
       "visitante": "FURIA DEL CUBO",
       "fecha": "2026-08-02",
@@ -90,7 +102,7 @@
       "estado": "Programado"
     },
     {
-      "partido": "G-A-04",
+      "partido": "G-A-05",
       "fase": "Fase de grupos",
       "grupo": "A",
       "local": "CARROCERIAS ESTESO",
@@ -102,23 +114,11 @@
       "estado": "Programado"
     },
     {
-      "partido": "G-A-05",
+      "partido": "G-A-06",
       "fase": "Fase de grupos",
       "grupo": "A",
       "local": "TRICOLOR",
       "visitante": "BRASIL 90",
-      "fecha": "2026-08-02",
-      "hora": "07:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
-    },
-    {
-      "partido": "G-A-06",
-      "fase": "Fase de grupos",
-      "grupo": "A",
-      "local": "Equipo A2",
-      "visitante": "Equipo A4",
       "fecha": "2026-08-02",
       "hora": "07:00",
       "golesLocal": null,
