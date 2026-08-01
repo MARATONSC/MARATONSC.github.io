@@ -163,8 +163,8 @@
       "fecha": "2026-08-02",
       "hora": "01:00",
       "golesLocal": 2,
-      "golesVisitante": 2,
-      "estado": "Disputando",
+      "golesVisitante": 3,
+      "estado": "Finalizado",
       "estadoManual": true
     },
     {
