@@ -406,9 +406,9 @@
         const match = liveMatches[0];
         const localTeam = hasValue(match.local) ? match.local : "Por definir";
         const awayTeam = hasValue(match.visitante) ? match.visitante : "Por definir";
-        const result = match.golesLocal !== null && match.golesVisitante !== null
-          ? `${match.golesLocal} - ${match.golesVisitante}`
-          : "En juego";
+        const hasScore = match.golesLocal !== null && match.golesVisitante !== null;
+        const localScore = hasScore ? match.golesLocal : "";
+        const awayScore = hasScore ? match.golesVisitante : "";
 
         UI.liveMatch.classList.remove("is-hidden");
         UI.liveMatch.innerHTML = `
@@ -417,9 +417,19 @@
             <span>${matchPhaseLabel(match)} · ${formatDateTimeLabel(match)}</span>
           </div>
           <div class="live-match-body">
-            <span class="live-match-team">${localTeam}</span>
-            <span class="live-match-score">${result}</span>
-            <span class="live-match-team">${awayTeam}</span>
+            <div class="live-match-team-card">
+              <span class="live-match-team-label">Local</span>
+              <span class="live-match-team">${localTeam}</span>
+            </div>
+            <div class="live-match-score-card">
+              ${hasScore
+                ? `<span class="live-match-score">${localScore}</span><span class="live-match-score-separator">-</span><span class="live-match-score">${awayScore}</span>`
+                : `<span class="live-match-score-pending">VS</span>`}
+            </div>
+            <div class="live-match-team-card live-match-team-card--away">
+              <span class="live-match-team-label">Visitante</span>
+              <span class="live-match-team">${awayTeam}</span>
+            </div>
           </div>
         `;
       };

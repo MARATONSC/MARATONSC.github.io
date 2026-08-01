@@ -340,11 +340,11 @@ button:hover {
 }
 
 .live-match {
-  border: 2px solid #ef4444;
+  border: 2px solid #dc2626;
   border-radius: 12px;
-  padding: 0.9rem;
-  background: linear-gradient(135deg, #fff7ed, #ffffff 48%, #fee2e2);
-  box-shadow: 0 18px 34px rgba(239, 68, 68, 0.18);
+  padding: 1rem;
+  background: linear-gradient(135deg, #fff7ed, #ffffff 42%, #fee2e2);
+  box-shadow: 0 20px 38px rgba(127, 29, 29, 0.2);
 }
 
 .live-match-head {
@@ -368,34 +368,75 @@ button:hover {
 }
 
 .live-match-body {
-  margin-top: 0.75rem;
+  margin-top: 0.85rem;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.8rem;
+  grid-template-columns: minmax(0, 1fr) minmax(8.5rem, auto) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.live-match-team-card {
+  min-width: 0;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.82);
+  display: grid;
+  align-content: center;
+  gap: 0.25rem;
+}
+
+.live-match-team-card--away {
+  text-align: right;
+}
+
+.live-match-team-label {
+  color: #991b1b;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .live-match-team {
   min-width: 0;
   font-weight: 900;
-  font-size: 1.12rem;
+  font-size: 1.1rem;
   color: #111827;
   overflow-wrap: anywhere;
 }
 
-.live-match-team:last-child {
-  text-align: right;
+.live-match-score-card {
+  border-radius: 12px;
+  padding: 0.5rem 0.8rem;
+  background: #111827;
+  color: #ffffff;
+  display: grid;
+  grid-template-columns: minmax(2rem, 1fr) auto minmax(2rem, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: 0.45rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .live-match-score {
-  min-width: 5.5rem;
-  border-radius: 10px;
-  padding: 0.45rem 0.65rem;
-  background: #111827;
-  color: #ffffff;
   text-align: center;
   font-weight: 900;
-  font-size: 1.15rem;
+  font-size: 2.35rem;
+  line-height: 1;
+  font-family: "Barlow Condensed", "Nunito", sans-serif;
+}
+
+.live-match-score-separator {
+  color: #fecaca;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.live-match-score-pending {
+  grid-column: 1 / -1;
+  font-weight: 900;
+  font-size: 1.65rem;
+  letter-spacing: 0;
 }
 
 .next-matches-list {
@@ -1020,13 +1061,14 @@ footer {
     gap: 0.5rem;
   }
 
-  .live-match-team,
-  .live-match-team:last-child {
+  .live-match-team-card,
+  .live-match-team-card--away {
     text-align: left;
   }
 
-  .live-match-score {
+  .live-match-score-card {
     width: 100%;
+    min-height: 4.8rem;
   }
 
   .schedule-item {
