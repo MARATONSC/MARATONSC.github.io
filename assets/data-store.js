@@ -304,16 +304,8 @@ const MaratonDataStore = (() => {
 
   const getTimedStatus = (match = {}, now = Date.now(), durationFallback = AUTO_DURATION_MINUTES) => {
     const status = toText(pickField(match, ["estado", "status"], "Programado"));
-    if (status === "Finalizado" && hasManualResult(match)) return "Finalizado";
-    if (match.estadoManual === true || match.manualStatus === true) return status || "Programado";
-
-    const start = matchStartTime(match);
-    if (start === null) return status || "Programado";
-
-    const end = start + durationMinutesValue(durationFallback) * 60 * 1000;
-    if (now < start) return "Programado";
-    if (now < end) return "Disputando";
-    return "Finalizado";
+    if (status === "Disputando" || status === "Finalizado") return status;
+    return "Programado";
   };
 
   const applyAutomaticStatusesToMatches = (matches = [], now = Date.now(), durationFallback = AUTO_DURATION_MINUTES) => {

@@ -158,6 +158,7 @@
         thirdPlace: [],
       };
       let groupMatches = [];
+      let upcomingMatchesData = [];
 
       const toText = (value) => String(value || "").trim();
 
@@ -409,11 +410,18 @@
 
           const localTeam = hasValue(match.local) ? match.local : "Por definir";
           const awayTeam = hasValue(match.visitante) ? match.visitante : "Por definir";
+          const matchPhase = hasValue(match.ronda)
+            ? match.ronda
+            : hasValue(match.fase)
+              ? match.fase
+              : hasValue(match.grupo)
+                ? `Grupo ${match.grupo}`
+                : "Sin fase";
 
           row.innerHTML = `
             <span class="upcoming-match-teams">${localTeam} vs ${awayTeam}</span>
             <span class="upcoming-match-meta">
-              <span>${toText(match.ronda) || "Sin ronda"}</span>
+              <span>${matchPhase}</span>
               <span>·</span>
               <span>${formatDateTimeLabel(match)}</span>
             </span>
@@ -827,8 +835,6 @@
           thirdPlace: [thirdMatch],
         };
 
-        const allMatches = [...qf, sfLeft, sfRight, finalMatch, thirdMatch];
-        renderUpcomingMatches(allMatches);
         renderEliminationRound(activeEliminationRound);
       };
 
@@ -961,6 +967,14 @@
           groupMatches = getGroupMatchList(groupsRaw);
           renderGroups(groupsRaw.grupos || groupsRaw.groups || {}, groupMatches);
           renderElimination(eliminationRaw.eliminatoria || eliminationRaw.elimination || {});
+          upcomingMatchesData = [
+            ...groupMatches,
+            ...(eliminationData.quarterFinals || []),
+            ...(eliminationData.semiFinals || []),
+            ...(eliminationData.finals || []),
+            ...(eliminationData.thirdPlace || []),
+          ];
+          renderUpcomingMatches(upcomingMatchesData);
           renderProgramacion();
 
           updateTimestamp();
@@ -1009,11 +1023,7 @@
         const expanded = UI.upcomingMoreBtn.dataset.expanded === "true";
         UI.upcomingMoreBtn.dataset.expanded = expanded ? "false" : "true";
 
-        renderUpcomingMatches([
-          ...(eliminationData.quarterFinals || []),
-          ...(eliminationData.semiFinals || []),
-          ...(eliminationData.finals || []),
-        ]);
+        renderUpcomingMatches(upcomingMatchesData);
       });
 
       const defaultSection = window.location.hash.replace("#", "") || "inicio";

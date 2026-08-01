@@ -100,10 +100,9 @@ También se puede usar [`admin.html`](https://github.com/MARATONSC/MARATONSC.git
 - Cada edición se guarda automáticamente en el navegador actual, útil para previsualizar al instante.
 - `Publicar en GitHub` sube `data/evento.json`, `data/grupos.json` y `data/eliminatoria.json` al repositorio mediante GitHub API.
 - `Restaurar` descarta los cambios locales del navegador y vuelve a cargar los JSON publicados, previa confirmación.
-- Los partidos calculan el estado automáticamente con `fecha`, `hora` y la duración global `duracionPartidosMinutos`: antes del inicio son `Programado`, durante la duración son `Disputando` y después pasan a `Finalizado`.
+- El estado de los partidos no cambia automáticamente por fecha, hora ni marcador. El administrador debe cambiarlo manualmente entre `Programado`, `Disputando` y `Finalizado` desde el panel.
 - Los partidos ya existentes no se añaden ni eliminan desde el panel; en `Fase de grupos` se editan sus equipos, fecha, hora, goles y estado debajo de las tablas calculadas.
 - En `Fase de grupos` hay un filtro para mostrar todos los grupos o solo un grupo concreto.
-- Si un partido necesita estado fijo, marca `Manual` en el panel.
 - El PIN de `admin.html` es una barrera ligera en cliente. En una web estática pública no sustituye a una autenticación real con backend.
 
 Para publicar desde el panel con GitHub API:
