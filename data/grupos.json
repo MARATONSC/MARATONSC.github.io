@@ -148,8 +148,8 @@
       "visitante": "COPICHO CAUTION",
       "fecha": "2026-08-01",
       "hora": "22:00",
-      "golesLocal": null,
-      "golesVisitante": null,
+      "golesLocal": 0,
+      "golesVisitante": 0,
       "estado": "Programado"
     },
     {
