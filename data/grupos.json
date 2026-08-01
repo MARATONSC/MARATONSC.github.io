@@ -209,9 +209,10 @@
       "visitante": "KIOSKO",
       "fecha": "2026-08-01",
       "hora": "23:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
+      "golesLocal": 0,
+      "golesVisitante": 0,
+      "estado": "Disputando",
+      "estadoManual": true
     },
     {
       "partido": "G-C-02",
