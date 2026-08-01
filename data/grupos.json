@@ -134,8 +134,8 @@
       "visitante": "MOPRIFACHA",
       "fecha": "2026-08-01",
       "hora": "20:00",
-      "golesLocal": 0,
-      "golesVisitante": 0,
+      "golesLocal": null,
+      "golesVisitante": null,
       "estado": "Programado",
       "estadoManual": true
     },
