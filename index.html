@@ -55,6 +55,7 @@
           <h3>Bienvenido a la Maratón de fútbol sala</h3>
           <p>Te informamos de todo lo relacionado con el campeonato: programación, grupos y eliminatorias.</p>
         </article>
+        <article id="live-match" class="live-match is-hidden" aria-live="polite"></article>
         <article class="next-matches">
           <h3>Próximos partidos</h3>
           <ul id="upcoming-matches" class="next-matches-list">
@@ -134,6 +135,7 @@
         eventMap: document.getElementById("event-map"),
         eventMapLink: document.getElementById("event-map-link"),
         eventMapWrap: document.getElementById("location-map-wrapper"),
+        liveMatch: document.getElementById("live-match"),
         upcomingMatches: document.getElementById("upcoming-matches"),
         upcomingMoreBtn: document.getElementById("upcoming-more"),
         scheduleView: document.getElementById("schedule-view"),
@@ -383,6 +385,45 @@
         return `${dateLabel} · ${timeLabel}`;
       };
 
+      const matchPhaseLabel = (match = {}) => {
+        if (hasValue(match.ronda)) return match.ronda;
+        if (hasValue(match.fase)) return match.fase;
+        if (hasValue(match.grupo)) return `Grupo ${match.grupo}`;
+        return "Sin fase";
+      };
+
+      const renderLiveMatch = (matches = []) => {
+        const liveMatches = matches
+          .filter((match) => toText(match.estado) === "Disputando")
+          .sort(compareMatchDateTime);
+
+        if (liveMatches.length === 0) {
+          UI.liveMatch.classList.add("is-hidden");
+          UI.liveMatch.replaceChildren();
+          return;
+        }
+
+        const match = liveMatches[0];
+        const localTeam = hasValue(match.local) ? match.local : "Por definir";
+        const awayTeam = hasValue(match.visitante) ? match.visitante : "Por definir";
+        const result = match.golesLocal !== null && match.golesVisitante !== null
+          ? `${match.golesLocal} - ${match.golesVisitante}`
+          : "En juego";
+
+        UI.liveMatch.classList.remove("is-hidden");
+        UI.liveMatch.innerHTML = `
+          <div class="live-match-head">
+            <span class="live-match-badge">En juego</span>
+            <span>${matchPhaseLabel(match)} · ${formatDateTimeLabel(match)}</span>
+          </div>
+          <div class="live-match-body">
+            <span class="live-match-team">${localTeam}</span>
+            <span class="live-match-score">${result}</span>
+            <span class="live-match-team">${awayTeam}</span>
+          </div>
+        `;
+      };
+
       const renderUpcomingMatches = (matches = []) => {
         UI.upcomingMatches.replaceChildren();
 
@@ -410,18 +451,11 @@
 
           const localTeam = hasValue(match.local) ? match.local : "Por definir";
           const awayTeam = hasValue(match.visitante) ? match.visitante : "Por definir";
-          const matchPhase = hasValue(match.ronda)
-            ? match.ronda
-            : hasValue(match.fase)
-              ? match.fase
-              : hasValue(match.grupo)
-                ? `Grupo ${match.grupo}`
-                : "Sin fase";
 
           row.innerHTML = `
             <span class="upcoming-match-teams">${localTeam} vs ${awayTeam}</span>
             <span class="upcoming-match-meta">
-              <span>${matchPhase}</span>
+              <span>${matchPhaseLabel(match)}</span>
               <span>·</span>
               <span>${formatDateTimeLabel(match)}</span>
             </span>
@@ -974,6 +1008,7 @@
             ...(eliminationData.finals || []),
             ...(eliminationData.thirdPlace || []),
           ];
+          renderLiveMatch(upcomingMatchesData);
           renderUpcomingMatches(upcomingMatchesData);
           renderProgramacion();
 
