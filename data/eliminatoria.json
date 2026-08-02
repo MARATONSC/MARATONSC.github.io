@@ -70,8 +70,8 @@
         "visitante": "FURIA DEL CUBO",
         "fecha": "2026-08-02",
         "hora": "16:00",
-        "golesLocal": 0,
-        "golesVisitante": 0,
+        "golesLocal": 1,
+        "golesVisitante": 1,
         "estado": "Disputando",
         "estadoManual": true
       }
