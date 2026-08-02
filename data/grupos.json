@@ -101,7 +101,7 @@
       "hora": "02:00",
       "golesLocal": 4,
       "golesVisitante": 5,
-      "estado": "Disputando",
+      "estado": "Finalizado",
       "estadoManual": true
     },
     {
@@ -176,9 +176,10 @@
       "visitante": "COPICHO CAUTION",
       "fecha": "2026-08-02",
       "hora": "03:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
+      "golesLocal": 0,
+      "golesVisitante": 1,
+      "estado": "Disputando",
+      "estadoManual": true
     },
     {
       "partido": "G-B-05",
