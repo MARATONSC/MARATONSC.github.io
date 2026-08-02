@@ -190,9 +190,10 @@
       "visitante": "COPICHO CAUTION",
       "fecha": "2026-08-02",
       "hora": "06:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
+      "golesLocal": 0,
+      "golesVisitante": 0,
+      "estado": "Disputando",
+      "estadoManual": true
     },
     {
       "partido": "G-B-06",
