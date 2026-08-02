@@ -226,9 +226,9 @@
       "visitante": "ESTRELLA-2",
       "fecha": "2026-08-02",
       "hora": "04:00",
-      "golesLocal": 5,
+      "golesLocal": 6,
       "golesVisitante": 1,
-      "estado": "Disputando",
+      "estado": "Finalizado",
       "estadoManual": true
     },
     {
