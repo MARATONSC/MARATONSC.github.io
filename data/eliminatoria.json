@@ -8,9 +8,9 @@
         "visitante": "APLAZADO",
         "fecha": "2026-08-02",
         "hora": "11:00",
-        "golesLocal": null,
+        "golesLocal": 1,
         "golesVisitante": null,
-        "estado": "Programado",
+        "estado": "Disputando",
         "estadoManual": true
       },
       {
