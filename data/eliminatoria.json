@@ -46,7 +46,7 @@
         "hora": "14:00",
         "golesLocal": 6,
         "golesVisitante": 4,
-        "estado": "Disputando",
+        "estado": "Finalizado",
         "estadoManual": true
       }
     ],
@@ -54,13 +54,14 @@
       {
         "partido": "S1",
         "fase": "Semifinal",
-        "local": "",
-        "visitante": "",
+        "local": "CARROCERIAS ESTESO",
+        "visitante": "KIOSKO",
         "fecha": "2026-08-02",
         "hora": "15:00",
-        "golesLocal": null,
-        "golesVisitante": null,
-        "estado": "Programado"
+        "golesLocal": 0,
+        "golesVisitante": 0,
+        "estado": "Disputando",
+        "estadoManual": true
       },
       {
         "partido": "S2",
