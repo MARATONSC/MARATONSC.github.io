@@ -17,17 +17,18 @@
         "partido": "Q2",
         "fase": "Cuartos de final",
         "local": "SPORTIUM DE GIJON",
-        "visitante": "2ºC",
+        "visitante": "KIOSKO",
         "fecha": "2026-08-02",
         "hora": "12:00",
         "golesLocal": null,
         "golesVisitante": null,
-        "estado": "Programado"
+        "estado": "Programado",
+        "estadoManual": true
       },
       {
         "partido": "Q3",
         "fase": "Cuartos de final",
-        "local": "1ºRes",
+        "local": "GARCINOX",
         "visitante": "TRICOLOR",
         "fecha": "2026-08-02",
         "hora": "13:00",
