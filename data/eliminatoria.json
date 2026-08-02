@@ -72,31 +72,33 @@
         "hora": "16:00",
         "golesLocal": 4,
         "golesVisitante": 1,
-        "estado": "Disputando",
+        "estado": "Finalizado",
         "estadoManual": true
       }
     ],
     "tercerPuesto": {
       "partido": "F2",
       "fase": "3.º y 4.º puesto",
-      "local": "PS1",
-      "visitante": "PS2",
+      "local": "FURIA DEL CUBO",
+      "visitante": "KIOSKO",
       "fecha": "2026-08-02",
       "hora": "17:30",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
+      "golesLocal": 1,
+      "golesVisitante": 3,
+      "estado": "Finalizado",
+      "estadoManual": true
     },
     "final": {
       "partido": "F1",
       "fase": "Final",
-      "local": "",
-      "visitante": "",
+      "local": "CARROCERIAS ESTESO",
+      "visitante": "GARCINOX",
       "fecha": "2026-08-02",
       "hora": "19:00",
-      "golesLocal": null,
-      "golesVisitante": null,
-      "estado": "Programado"
+      "golesLocal": 0,
+      "golesVisitante": 0,
+      "estado": "Disputando",
+      "estadoManual": true
     }
   }
 }
